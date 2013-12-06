@@ -19,52 +19,52 @@ public class EventDetail extends Activity {
 	private final String LOG_TAG = "Detail";
 	private String event_id;
 	private String title;
-	private static String feedbackURL = "https://cccv.pentabarf.org/feedback/28C3/event/"; // + 4302.en.html
+	private static String feedbackURL = "https://cccv.pentabarf.org/feedback/30C3/event/"; // + 4302.en.html
 	private Locale locale;
-	
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.detail);
-        
+
         Intent intent = getIntent();
-        
+
         locale = getResources().getConfiguration().locale;
-     
+
         event_id = intent.getStringExtra("eventid");
-        
+
         TextView t = (TextView)findViewById(R.id.title);
         title = intent.getStringExtra("title");
         t.setText(title);
-        
+
         t = (TextView)findViewById(R.id.subtitle);
         t.setText(intent.getStringExtra("subtitle"));
-        
+
         t = (TextView)findViewById(R.id.speakers);
         t.setText(intent.getStringExtra("spkr"));
-        
+
         t = (TextView)findViewById(R.id.abstractt);
         String s = intent.getStringExtra("abstract");
-        s = s.replaceAll("\\[(.*?)\\]\\(([^ \\)]+).*?\\)", "<a href=\"$2\">$1</a>");   
+        s = s.replaceAll("\\[(.*?)\\]\\(([^ \\)]+).*?\\)", "<a href=\"$2\">$1</a>");
         t.setText(Html.fromHtml(s), TextView.BufferType.SPANNABLE);
         t.setMovementMethod(new LinkMovementMethod());
-        
+
         t = (TextView)findViewById(R.id.description);
         s = intent.getStringExtra("descr");
-        s = s.replaceAll("\\[(.*?)\\]\\(([^ \\)]+).*?\\)", "<a href=\"$2\">$1</a>");   
+        s = s.replaceAll("\\[(.*?)\\]\\(([^ \\)]+).*?\\)", "<a href=\"$2\">$1</a>");
         t.setText(Html.fromHtml(s), TextView.BufferType.SPANNABLE);
         t.setMovementMethod(new LinkMovementMethod());
-        
+
         TextView l = (TextView)findViewById(R.id.linksSection);
         String links = intent.getStringExtra("links");
         t = (TextView)findViewById(R.id.links);
-        
+
         if (links.length() > 0) {
         	Log.d(LOG_TAG, "show links");
         	l.setVisibility(View.VISIBLE);
         	t.setVisibility(View.VISIBLE);
         	links = links.replaceAll("\\),", ")<br>");
-	        links = links.replaceAll("\\[(.*?)\\]\\(([^ \\)]+).*?\\)", "<a href=\"$2\">$1</a>");   
+	        links = links.replaceAll("\\[(.*?)\\]\\(([^ \\)]+).*?\\)", "<a href=\"$2\">$1</a>");
 	        t.setText(Html.fromHtml(links), TextView.BufferType.SPANNABLE);
 	        t.setMovementMethod(new LinkMovementMethod());
         } else {
@@ -72,7 +72,7 @@ public class EventDetail extends Activity {
         	t.setVisibility(View.GONE);
         }
     }
-    
+
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		MenuInflater mi = new MenuInflater(getApplication());

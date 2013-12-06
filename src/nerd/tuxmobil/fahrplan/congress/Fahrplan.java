@@ -62,7 +62,7 @@ public class Fahrplan extends Activity implements OnClickListener {
 	private int day = 1;
 	private View dayTextView;
 	public static Context context = null;
-	public static String[] rooms = { "Saal 1", "Saal 2", "Saal 3" };
+	public static String[] rooms = { "Saal 1", "Saal 2", "Saal G", "Saal 6" };
 	private FahrplanParser parser;
 	private LinearLayout statusBar;
 	private Animation slideUpIn;
@@ -86,7 +86,7 @@ public class Fahrplan extends Activity implements OnClickListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		context = this;
 		setContentView(R.layout.main);
 		global = (MyApp) getApplicationContext();
@@ -107,7 +107,7 @@ public class Fahrplan extends Activity implements OnClickListener {
 		switch (getResources().getConfiguration().orientation) {
 			case Configuration.ORIENTATION_PORTRAIT:
 				if (findViewById(R.id.horizScroller) != null) {
-					int width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 
+					int width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
 		                     (float) screenWidth, getResources().getDisplayMetrics());
 					Log.d(LOG_TAG, "adjust column width to " + width);
 					LinearLayout l = (LinearLayout) findViewById(R.id.raum1);
@@ -124,29 +124,29 @@ public class Fahrplan extends Activity implements OnClickListener {
 		progress = null;
 
 		trackColors = new HashMap<String, Integer>();
-		trackColors.put("Hacking", R.drawable.hacking_event_border);
-		trackColors.put("Society", R.drawable.society_event_border);
-		trackColors.put("Making", R.drawable.making_event_border);
-		trackColors.put("Community", R.drawable.community_event_border);
-		trackColors.put("Culture", R.drawable.culture_event_border);
-		trackColors.put("Science", R.drawable.science_event_border);
-		trackColors.put("Misc", R.drawable.misc_event_border);
-		trackColors.put("Show", R.drawable.science_event_border);
-		trackColors.put("Society and Politics", R.drawable.science_event_border);
-		
+		trackColors.put("Art & Beauty", R.drawable.art_event_border);
+		trackColors.put("CCC", R.drawable.ccc_event_border);
+		trackColors.put("Entertainment", R.drawable.entertainment_event_border);
+		trackColors.put("Ethics, Society & Politics", R.drawable.ethics_event_border);
+		trackColors.put("Hardware & Making", R.drawable.hardware_event_border);
+		trackColors.put("Other", R.drawable.other_event_border);
+		trackColors.put("Science & Engineering", R.drawable.science_event_border);
+		trackColors.put("Security & Safety", R.drawable.science_event_border);
+//		trackColors.put("Society and Politics", R.drawable.science_event_border);
+
 		trackColorsHi = new HashMap<String, Integer>();
-		trackColorsHi.put("Hacking", R.drawable.hacking_event_border_highlight);
-		trackColorsHi.put("Society", R.drawable.society_event_border_highlight);
-		trackColorsHi.put("Making", R.drawable.making_event_border_highlight);
-		trackColorsHi.put("Community", R.drawable.community_event_border_highlight);
-		trackColorsHi.put("Culture", R.drawable.culture_event_border_highlight);
-		trackColorsHi.put("Science", R.drawable.science_event_border_highlight);
-		trackColorsHi.put("Misc", R.drawable.misc_event_border_highlight);
-		trackColorsHi.put("Show", R.drawable.science_event_border_highlight);
-		trackColorsHi.put("Society and Politics", R.drawable.science_event_border_highlight);
+		trackColorsHi.put("Art & Beauty", R.drawable.art_event_border_highlight);
+		trackColorsHi.put("CCC", R.drawable.ccc_event_border_highlight);
+		trackColorsHi.put("Entertainment", R.drawable.entertainment_event_border_highlight);
+		trackColorsHi.put("Ethics, Society & Politics", R.drawable.ethics_event_border_highlight);
+		trackColorsHi.put("Hardware & Making", R.drawable.hardware_event_border_highlight);
+		trackColorsHi.put("Other", R.drawable.other_event_border_highlight);
+		trackColorsHi.put("Science & Engineering", R.drawable.science_event_border_highlight);
+		trackColorsHi.put("Security & Safety", R.drawable.science_event_border_highlight);
+//		trackColorsHi.put("Society and Politics", R.drawable.science_event_border_highlight);
 
         actionBar = (ActionBar) findViewById(R.id.actionbar);
-        
+
         dayTextView = actionBar.addAction(new Action() {
             @Override
             public void performAction(View view) {
@@ -160,12 +160,12 @@ public class Fahrplan extends Activity implements OnClickListener {
             public String getText() {
                 return getString(R.string.day);
             }
-            
+
             @Override
             public void ready(View view) {
             }
         });
-        
+
         actionBar.addAction(new Action() {
             @Override
             public void performAction(View view) {
@@ -179,13 +179,13 @@ public class Fahrplan extends Activity implements OnClickListener {
             public String getText() {
                 return null;
             }
-            
+
             @Override
             public void ready(View view) {
             	refreshBtn = view;
             }
         });
-        
+
 		statusLineText = (TextView) findViewById(R.id.statusLineText);
 
 		statusBar = (LinearLayout) findViewById(R.id.statusLine);
@@ -210,16 +210,16 @@ public class Fahrplan extends Activity implements OnClickListener {
 
 		Intent intent = getIntent();
 		String lecture_id = intent.getStringExtra("lecture_id");
-		
+
 		if (lecture_id != null) {
 			Log.d(LOG_TAG,"Open with lecture_id "+lecture_id);
 			day = intent.getIntExtra("day", day);
 			Log.d(LOG_TAG,"day "+day);
 		}
-		
+
 		MyApp.fetcher.setActivity(this);	// save current activity and trigger possible completion event
 		MyApp.parser.setActivity(this);		// save current activity and trigger possible completion event
-		
+
 		switch (MyApp.task_running) {
 		case FETCH:
 			Log.d(LOG_TAG, "fetch was pending, restart");
@@ -239,7 +239,7 @@ public class Fahrplan extends Activity implements OnClickListener {
 			}
 			break;
 		}
-		
+
 		if (lecture_id != null) {
 			scrollTo(lecture_id);
 		}
@@ -261,7 +261,7 @@ public class Fahrplan extends Activity implements OnClickListener {
 			}
 		}
 	}
-	
+
 	public void parseFahrplan() {
 		showParsingStatus();
 		MyApp.task_running = TASKS.PARSE;
@@ -330,12 +330,12 @@ public class Fahrplan extends Activity implements OnClickListener {
 			statusBar.startAnimation(slideUpIn);
 		}
 	}
-	
+
 	public void fetchFahrplan() {
 		if (MyApp.task_running == TASKS.NONE) {
 			MyApp.task_running = TASKS.FETCH;
 			showFetchingStatus();
-			fetcher.fetch("/congress/2011/Fahrplan/schedule.de.xml");
+			fetcher.fetch("/congress/2013/Fahrplan/schedule.xml");
 		} else {
 			Log.d(LOG_TAG, "fetch already in progress");
 		}
@@ -385,10 +385,10 @@ public class Fahrplan extends Activity implements OnClickListener {
 		updateRoomTitle(0);
 
 		fillTimes();
-		fillRoom("Saal 1", R.id.raum1);
-		fillRoom("Saal 2", R.id.raum2);
-		fillRoom("Saal 3", R.id.raum3);
-//		dayTextView.setText(String
+		fillRoom(rooms[0], R.id.raum1);
+		fillRoom(rooms[1], R.id.raum2);
+		fillRoom(rooms[2], R.id.raum3);
+		fillRoom(rooms[3], R.id.raum4);//		dayTextView.setText(String
 //				.format("%s %d", getString(R.string.day), day));
 		actionBar.updateText(dayTextView, String.format("%s %d", getString(R.string.day), day));
 	}
@@ -398,14 +398,14 @@ public class Fahrplan extends Activity implements OnClickListener {
 		final ScrollView parent = (ScrollView)findViewById(R.id.scrollView1);
 		View v = parent.findViewWithTag(lecture);
 		ImageView bell = (ImageView)v.findViewById(R.id.bell);
-		
+
 		if (lecture.has_alarm) {
 			bell.setVisibility(View.VISIBLE);
 		} else {
 			bell.setVisibility(View.GONE);
 		}
 	}
-	
+
 	private void scrollTo(String lecture_id) {
 		int height;
 		switch (getResources().getConfiguration().orientation) {
@@ -424,10 +424,10 @@ public class Fahrplan extends Activity implements OnClickListener {
 				final int pos = (lecture.relStartTime - firstLectureStart)/15 * height;
 				Log.d(LOG_TAG, "position is "+pos);
 				parent.post(new Runnable() {
-					
+
 					@Override
 					public void run() {
-						parent.scrollTo(0, pos);						
+						parent.scrollTo(0, pos);
 					}
 				});
 				if (getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE) {
@@ -438,7 +438,7 @@ public class Fahrplan extends Activity implements OnClickListener {
 								Log.d(LOG_TAG,"scroll horiz to "+i);
 								final int hpos = i;
 								horiz.post(new Runnable() {
-									
+
 									@Override
 									public void run() {
 										horiz.scrollToColumn(hpos);
@@ -448,13 +448,13 @@ public class Fahrplan extends Activity implements OnClickListener {
 							}
 						}
 					}
-					
+
 				}
 				break;
 			}
 		}
 	}
-	
+
 	private void chooseDay() {
 		CharSequence items[] = new CharSequence[MyApp.numdays];
 		Time now = new Time();
@@ -465,7 +465,7 @@ public class Fahrplan extends Activity implements OnClickListener {
 		currentDate.append(String.format("%02d", now.month + 1));
 		currentDate.append("-");
 		currentDate.append(String.format("%02d", now.monthDay));
-		
+
 		Log.d(LOG_TAG, "today is " + currentDate.toString());
 
 		for (int i = 0; i < MyApp.numdays; i++) {
@@ -483,7 +483,7 @@ public class Fahrplan extends Activity implements OnClickListener {
 			}
 			items[i] = sb.toString();
 		}
-		
+
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle(getString(R.string.choose_day));
 		builder.setItems(items, new DialogInterface.OnClickListener() {
@@ -513,7 +513,7 @@ public class Fahrplan extends Activity implements OnClickListener {
 					UntrustedCertDialogs.acceptKeyDialog(
 							R.string.dlg_certificate_message_fmt, this,
 							new cert_accepted() {
-	
+
 								@Override
 								public void cert_accepted() {
 									Log.d(LOG_TAG, "fetch on cert accepted.");
@@ -533,7 +533,7 @@ public class Fahrplan extends Activity implements OnClickListener {
 				actionBar.setProgressBarVisibility(View.GONE);
 				statusBar.startAnimation(slideDownOut);
 				statusBar.setVisibility(View.GONE);
-				refreshBtn.setVisibility(View.VISIBLE);			
+				refreshBtn.setVisibility(View.VISIBLE);
 				if (MyApp.numdays == 0) {
 					if (progress != null) {
 						progress.dismiss();
@@ -559,7 +559,7 @@ public class Fahrplan extends Activity implements OnClickListener {
 			actionBar.setProgressBarVisibility(View.GONE);
 			statusBar.startAnimation(slideDownOut);
 			statusBar.setVisibility(View.GONE);
-			refreshBtn.setVisibility(View.VISIBLE);			
+			refreshBtn.setVisibility(View.VISIBLE);
 			if (MyApp.numdays == 0) {
 				if (progress != null) {
 					progress.dismiss();
@@ -651,7 +651,7 @@ public class Fahrplan extends Activity implements OnClickListener {
 		}
 		return padding;
 	}
-	
+
 	private void fillRoom(String roomName, int roomId) {
 		LinearLayout room = (LinearLayout) findViewById(roomId);
 		room.removeAllViews();
@@ -726,12 +726,12 @@ public class Fahrplan extends Activity implements OnClickListener {
 
 	private void loadDays() {
 		MyApp.dateList = new ArrayList<DateList>();
-		
+
 		if (lecturedb == null) {
 			lecturedb = lecturesDB.getReadableDatabase();
 		}
 		Cursor cursor;
-		
+
 		try {
 			cursor = lecturedb.query("lectures", LecturesDBOpenHelper.allcolumns,
 					null, null, null,
@@ -742,13 +742,13 @@ public class Fahrplan extends Activity implements OnClickListener {
 			lecturedb = null;
 			return;
 		}
-		
+
 		if (cursor.getCount() == 0) {
 			// evtl. Datenbankreset wg. DB Formatänderung -> neu laden
 			cursor.close();
 			return;
 		}
-		
+
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
 			int day = cursor.getInt(3);
@@ -760,12 +760,12 @@ public class Fahrplan extends Activity implements OnClickListener {
 			cursor.moveToNext();
 		}
 		cursor.close();
-		
+
 		for (DateList dayL : MyApp.dateList) {
 			Log.d(LOG_TAG, "date day " + dayL.dayIdx + " = " + dayL.date);
 		}
 	}
-	
+
 	private void loadLectureList(int day, boolean force) {
 		Log.d(LOG_TAG, "load lectures of day " + day);
 
@@ -805,7 +805,7 @@ public class Fahrplan extends Activity implements OnClickListener {
 		}
 		Log.d(LOG_TAG, "Got " + cursor.getCount() + " rows.");
 		Log.d(LOG_TAG, "Got " + hCursor.getCount() + " highlight rows.");
-		
+
 		if (cursor.getCount() == 0) {
 			// evtl. Datenbankreset wg. DB Formatänderung -> neu laden
 			cursor.close();
@@ -813,7 +813,7 @@ public class Fahrplan extends Activity implements OnClickListener {
 			fetchFahrplan();
 			return;
 		}
-		
+
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
 			Lecture lecture = new Lecture(cursor.getString(0));
@@ -839,13 +839,13 @@ public class Fahrplan extends Activity implements OnClickListener {
 		}
 		cursor.close();
 		MyApp.lectureListDay = day;
-		
+
 		hCursor.moveToFirst();
 		while (!hCursor.isAfterLast()) {
 			String lecture_id = hCursor.getString(1);
 			int highlighted = hCursor.getInt(2);
 			Log.d(LOG_TAG, "lecture "+lecture_id+" is hightlighted:"+highlighted);
-			
+
 			for (Lecture lecture : MyApp.lectureList) {
 				if (lecture.lecture_id.equals(lecture_id)) {
 					lecture.highlight = (highlighted == 1 ? true : false);
@@ -854,17 +854,17 @@ public class Fahrplan extends Activity implements OnClickListener {
 			hCursor.moveToNext();
 		}
 		hCursor.close();
-		
+
 		loadAlarms();
 	}
 
 	private void loadAlarms() {
 		Cursor alarmCursor;
-		
+
 		for (Lecture lecture : MyApp.lectureList) {
 			lecture.has_alarm = false;
 		}
-			
+
 		if (alarmdb == null) {
 			alarmdb = alarmDB.getReadableDatabase();
 		}
@@ -879,12 +879,12 @@ public class Fahrplan extends Activity implements OnClickListener {
 			return;
 		}
 		Log.d(LOG_TAG, "Got " + alarmCursor.getCount() + " alarm rows.");
-		
+
 		alarmCursor.moveToFirst();
 		while (!alarmCursor.isAfterLast()) {
 			String lecture_id = alarmCursor.getString(4);
 			Log.d(LOG_TAG, "lecture "+lecture_id+" has alarm");
-			
+
 			for (Lecture lecture : MyApp.lectureList) {
 				if (lecture.lecture_id.equals(lecture_id)) {
 					lecture.has_alarm = true;
@@ -894,7 +894,7 @@ public class Fahrplan extends Activity implements OnClickListener {
 		}
 		alarmCursor.close();
 	}
-	
+
 	private void loadMeta() {
 		if (metadb == null) {
 			metadb = metaDB.getReadableDatabase();
@@ -951,7 +951,7 @@ public class Fahrplan extends Activity implements OnClickListener {
 		Log.d(LOG_TAG, "parseDone: " + result + " , numdays="+MyApp.numdays);
 		MyApp.task_running = TASKS.NONE;
 		MyApp.fahrplan_xml = null;
-		
+
 		setProgressBarIndeterminateVisibility(false);
 		if (MyApp.numdays == 0) {
 			if (progress != null) {
@@ -1033,10 +1033,10 @@ public class Fahrplan extends Activity implements OnClickListener {
 						android.R.layout.simple_spinner_item);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinner.setAdapter(adapter);
-		
+
 		TextView msg = (TextView)layout.findViewById(R.id.message);
 		msg.setText(R.string.choose_alarm_time);
-		
+
 		new AlertDialog.Builder(this).setTitle(R.string.setup_alarm).setView(layout)
 				.setPositiveButton(android.R.string.ok,
 						new DialogInterface.OnClickListener() {
@@ -1052,12 +1052,12 @@ public class Fahrplan extends Activity implements OnClickListener {
 
 	private int[] alarm_times = { 0, 5, 10, 15, 30, 45, 60 };
 	private View contextMenuView;
-	
+
 	public void deleteAlarm(Lecture lecture) {
 		AlarmsDBOpenHelper alarmDB = new AlarmsDBOpenHelper(this);
 		SQLiteDatabase db = alarmDB.getWritableDatabase();
 		Cursor cursor;
-		
+
 		try {
 		cursor = db.query("alarms", AlarmsDBOpenHelper.allcolumns,
 					"eventid=?", new String[] { lecture.lecture_id }, null,
@@ -1067,17 +1067,17 @@ public class Fahrplan extends Activity implements OnClickListener {
 			Log.d(LOG_TAG,"failure on alarm query");
 			db.close();
 			return;
-		} 
-		
+		}
+
 		if (cursor.getCount() == 0) {
 			db.close();
 			cursor.close();
 			Log.d(LOG_TAG, "alarm for " + lecture.lecture_id + " not found");
 			return;
 		}
-		
+
 		cursor.moveToFirst();
-		
+
 		Intent intent = new Intent(this, AlarmReceiver.class);
 		String lecture_id = cursor.getString(4);
 		intent.putExtra("lecture_id", lecture_id);
@@ -1090,71 +1090,71 @@ public class Fahrplan extends Activity implements OnClickListener {
 		// delete any previous alarms of this lecture
 		db.delete("alarms", "eventid=?", new String[] { lecture.lecture_id });
 		db.close();
-		
+
 		intent.setAction("de.machtnix.fahrplan.ALARM");
 		intent.setData(Uri.parse("alarm://"+lecture.lecture_id));
-		
+
 		AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
 		PendingIntent pendingintent = PendingIntent.getBroadcast(this, Integer.parseInt(lecture.lecture_id), intent, 0);
-		
+
 		// Cancel any existing alarms for this lecture
 		alarmManager.cancel(pendingintent);
-		
+
 		lecture.has_alarm = false;
 		setBell(lecture);
 	}
-	
+
 	public void addAlarm(View v, int alarmTime) {
 		Lecture lecture = (Lecture) v.getTag();
 		Time time = lecture.getTime();
 		long startTime = time.normalize(true);
 		long when = time.normalize(true) - (alarm_times[alarmTime] * 60 * 1000);
-		
+
 		// DEBUG
 		// when = System.currentTimeMillis() + (30 * 1000);
-		
+
 		time.set(when);
 		Log.d(LOG_TAG, "Alarm time: "+when);
-		
-		
+
+
 		Intent intent = new Intent(this, AlarmReceiver.class);
 		intent.putExtra("lecture_id", lecture.lecture_id);
 		intent.putExtra("day", lecture.day);
 		intent.putExtra("title", lecture.title);
 		intent.putExtra("startTime", startTime);
-		
+
 		intent.setAction("de.machtnix.fahrplan.ALARM");
 		intent.setData(Uri.parse("alarm://"+lecture.lecture_id));
-		
+
 		AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
 		PendingIntent pendingintent = PendingIntent.getBroadcast(this, Integer.parseInt(lecture.lecture_id), intent, 0);
-		
+
 		// Cancel any existing alarms for this lecture
 		alarmManager.cancel(pendingintent);
-		
+
 		// Set new alarm
 		alarmManager.set(AlarmManager.RTC_WAKEUP, when, pendingintent);
-		
+
 		// write to DB
-		
+
 		AlarmsDBOpenHelper alarmDB = new AlarmsDBOpenHelper(this);
 
 		SQLiteDatabase db = alarmDB.getWritableDatabase();
-		
+
 		// delete any previous alarms of this lecture
 		try {
 			db.beginTransaction();
 			db.delete("alarms", "eventid=?", new String[] { lecture.lecture_id });
-			
+
 			ContentValues values = new ContentValues();
-	
+
 			values.put("eventid", Integer.parseInt(lecture.lecture_id));
 			values.put("title", lecture.title);
 			values.put("time", when);
 			values.put("timeText", time.format("%Y-%m-%d %H:%M"));
 			values.put("displayTime", startTime);
 			values.put("day", lecture.day);
-	
+
 			db.insert("alarms", null, values);
 			db.setTransactionSuccessful();
 		} catch (SQLException e) {
@@ -1162,25 +1162,25 @@ public class Fahrplan extends Activity implements OnClickListener {
 			db.endTransaction();
 			db.close();
 		}
-		
+
 		lecture.has_alarm = true;
 		setBell(lecture);
 	}
-	
+
 	public void writeHighlight(Lecture lecture) {
 		HighlightDBOpenHelper highlightDB = new HighlightDBOpenHelper(this);
 
 		SQLiteDatabase db = highlightDB.getWritableDatabase();
-		
+
 		try {
 			db.beginTransaction();
 			db.delete("highlight", "eventid=?", new String[] { lecture.lecture_id });
-			
+
 			ContentValues values = new ContentValues();
-	
+
 			values.put("eventid", Integer.parseInt(lecture.lecture_id));
 			values.put("highlight", lecture.highlight ? 1 : 0);
-	
+
 			db.insert("highlight", null, values);
 			db.setTransactionSuccessful();
 		} catch (SQLException e) {
@@ -1189,13 +1189,13 @@ public class Fahrplan extends Activity implements OnClickListener {
 			db.close();
 		}
 	}
-	
+
 	public boolean onContextItemSelected(MenuItem item) {
 		int menuItemIndex = item.getItemId();
 		Lecture lecture = (Lecture)contextMenuView.getTag();
-		
+
 		Log.d(LOG_TAG,"clicked on "+((Lecture)contextMenuView.getTag()).lecture_id);
-		
+
 		switch (menuItemIndex) {
 		case 0:
 			Integer drawable;
@@ -1242,7 +1242,7 @@ public class Fahrplan extends Activity implements OnClickListener {
 			setBell(lecture);
 		}
 	}
-	
+
 	public void onActivityResult(int requestCode, int resultCode, Intent intent)
 	{
 		super.onActivityResult(requestCode, resultCode, intent);

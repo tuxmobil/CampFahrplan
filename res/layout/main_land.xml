@@ -3,12 +3,12 @@
 	android:layout_height="match_parent" android:orientation="vertical"
 	android:background="#000000" xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res/nerd.tuxmobil.fahrplan.congress">
-	
-	<com.markupartist.android.widget.ActionBar 
+
+	<com.markupartist.android.widget.ActionBar
     	android:id="@+id/actionbar"
     	app:title="@string/app_name"
     	style="@style/ActionBar"
-    	android:layout_alignParentTop="true" 
+    	android:layout_alignParentTop="true"
 	/>
 	<LinearLayout android:id="@+id/roomNameLandscape"
 		android:orientation="horizontal" android:layout_width="match_parent"
@@ -26,7 +26,12 @@
 			android:layout_weight="1" android:layout_width="wrap_content"
 			android:gravity="center"></TextView>
 		<TextView android:textColor="#ffffff" android:layout_height="wrap_content"
-			android:layout_gravity="center" android:text="Saal 3"
+			android:layout_gravity="center" android:text="Saal G"
+			android:textStyle="bold" android:textSize="11sp"
+			android:layout_weight="1" android:layout_width="wrap_content"
+			android:gravity="center"></TextView>
+		<TextView android:textColor="#ffffff" android:layout_height="wrap_content"
+			android:layout_gravity="center" android:text="Saal 6"
 			android:textStyle="bold" android:textSize="11sp"
 			android:layout_weight="1" android:layout_width="wrap_content"
 			android:gravity="center"></TextView>

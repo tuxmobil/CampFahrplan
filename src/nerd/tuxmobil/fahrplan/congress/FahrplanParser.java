@@ -18,7 +18,7 @@ public class FahrplanParser {
 	private parser task;
 	private Activity activity;
 	private Context context;
-	
+
 	public FahrplanParser(Context context) {
 		task = null;
 		MyApp.parser = this;
@@ -29,12 +29,12 @@ public class FahrplanParser {
 		task = new parser(activity, context);
 		task.execute(fahrplan);
 	}
-	
+
 	public void cancel()
 	{
 		if (task != null) task.cancel(false);
 	}
-	
+
 	public void setActivity(Activity activity) {
 		this.activity = activity;
 		if (task != null) {
@@ -63,7 +63,7 @@ class parser extends AsyncTask<String, Void, Boolean> {
 
 	public void setActivity(Activity activity) {
 		this.activity = activity;
-		
+
 		if (completed && (activity != null)) {
 			notifyActivity();
 		}
@@ -74,7 +74,7 @@ class parser extends AsyncTask<String, Void, Boolean> {
 		return parseFahrplan(args[0]);
 
 	}
-	
+
 	protected void onCancelled() {
 		Log.d(LOG_TAG, "parse cancelled");
 		if (db != null) db.close();
@@ -84,11 +84,11 @@ class parser extends AsyncTask<String, Void, Boolean> {
 		((Fahrplan)activity).onParseDone(result, meta.version);
 		completed = false;
 	}
-	
+
 	protected void onPostExecute(Boolean result) {
 		completed = true;
 		this.result = result;
-		
+
 		if (activity != null) {
 			notifyActivity();
 		}
@@ -108,7 +108,7 @@ class parser extends AsyncTask<String, Void, Boolean> {
 			values.put("version", meta.version);
 			values.put("title", meta.title);
 			values.put("subtitle", meta.subtitle);
-	
+
 			db.insert("meta", null, values);
 			db.setTransactionSuccessful();
 		} catch (SQLException e) {
@@ -164,7 +164,7 @@ class parser extends AsyncTask<String, Void, Boolean> {
 			int numdays = 0;
 			String room = null;
 			int day = 0;
-			int dayChangeTime = 0;
+			int dayChangeTime = 600; // hardcoded 10:00 as not provided in the schedule.xml
 			String date = "";
 			while (eventType != XmlPullParser.END_DOCUMENT && !done && !isCancelled()) {
 				String name = null;
@@ -231,7 +231,7 @@ class parser extends AsyncTask<String, Void, Boolean> {
 										lecture.speakers = lecture.speakers + (lecture.speakers.length() > 0 ? ";":"") + parser.getText();
 									}
 								} else if (name.equals("link")) {
-									String url = parser.getAttributeValue(null, "href"); 
+									String url = parser.getAttributeValue(null, "href");
 									parser.next();
 									String urlname = parser.getText();
 									StringBuilder sb = new StringBuilder();

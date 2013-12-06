@@ -5,12 +5,12 @@
 	xmlns:app="http://schemas.android.com/apk/res/nerd.tuxmobil.fahrplan.congress"
 	>
 
-	<com.markupartist.android.widget.ActionBar 
+	<com.markupartist.android.widget.ActionBar
     	android:id="@+id/actionbar"
     	app:title="@string/app_name"
     	style="@style/ActionBar"
-    	android:layout_alignParentTop="true" 
-	/>	
+    	android:layout_alignParentTop="true"
+	/>
 	<TextView android:textColor="#ffffff" android:id="@+id/roomName"
 		android:layout_height="wrap_content" android:layout_gravity="center"
 		android:text=""
@@ -44,6 +44,10 @@
 						android:orientation="vertical">
 					</LinearLayout>
 					<LinearLayout android:id="@+id/raum3"
+						android:layout_width="285dp" android:layout_height="match_parent"
+						android:orientation="vertical">
+					</LinearLayout>
+					<LinearLayout android:id="@+id/raum4"
 						android:layout_width="285dp" android:layout_height="match_parent"
 						android:orientation="vertical">
 					</LinearLayout>
