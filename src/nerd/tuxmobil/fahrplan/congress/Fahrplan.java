@@ -131,7 +131,7 @@ public class Fahrplan extends Activity implements OnClickListener {
 		trackColors.put("Hardware & Making", R.drawable.hardware_event_border);
 		trackColors.put("Other", R.drawable.other_event_border);
 		trackColors.put("Science & Engineering", R.drawable.science_event_border);
-		trackColors.put("Security & Safety", R.drawable.science_event_border);
+		trackColors.put("Security & Safety", R.drawable.security_event_border);
 //		trackColors.put("Society and Politics", R.drawable.science_event_border);
 
 		trackColorsHi = new HashMap<String, Integer>();
@@ -142,7 +142,7 @@ public class Fahrplan extends Activity implements OnClickListener {
 		trackColorsHi.put("Hardware & Making", R.drawable.hardware_event_border_highlight);
 		trackColorsHi.put("Other", R.drawable.other_event_border_highlight);
 		trackColorsHi.put("Science & Engineering", R.drawable.science_event_border_highlight);
-		trackColorsHi.put("Security & Safety", R.drawable.science_event_border_highlight);
+		trackColorsHi.put("Security & Safety", R.drawable.security_event_border_highlight);
 //		trackColorsHi.put("Society and Politics", R.drawable.science_event_border_highlight);
 
         actionBar = (ActionBar) findViewById(R.id.actionbar);
