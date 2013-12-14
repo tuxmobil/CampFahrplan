@@ -1086,7 +1086,7 @@ public class Fahrplan extends SherlockActivity implements OnClickListener, OnNav
 				(ViewGroup) findViewById(R.id.layout_root));
 
 		TextView text = (TextView) layout.findViewById(R.id.eventVersion);
-		text.setText(getString(R.string.fahrplan) + " " + MyApp.version);
+		text.setText(getString(R.string.app_name) + " " + MyApp.version);
 		text = (TextView) layout.findViewById(R.id.eventTitle);
 		text.setText(MyApp.title);
 		Log.d(LOG_TAG, "title:" + MyApp.title);
