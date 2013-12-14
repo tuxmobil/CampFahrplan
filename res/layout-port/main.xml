@@ -11,7 +11,7 @@
     	android:layout_alignParentTop="true" 
     	android:background="@android:color/black"
 		></TextView>
-	<nerd.tuxmobil.fahrplan.congress.CustomScrollView
+	<chaos.fahrplan.congress.CustomScrollView
 		android:id="@+id/scrollView1" android:layout_width="fill_parent"
 		android:layout_height="fill_parent" xmlns:android="http://schemas.android.com/apk/res/android"
 		android:layout_below="@+id/roomName">
@@ -22,7 +22,7 @@
 				android:layout_width="wrap_content" android:layout_height="match_parent"
 				android:orientation="vertical" android:background="#ffaaaaaa">
 			</LinearLayout>
-			<nerd.tuxmobil.fahrplan.congress.HorizontalSnapScrollView
+			<chaos.fahrplan.congress.HorizontalSnapScrollView
 				android:id="@+id/horizScroller" android:layout_width="wrap_content"
 				android:layout_height="match_parent" android:fadingEdge="none"
 				android:scrollbars="none" android:background="@color/fahrplan_background">
@@ -47,9 +47,9 @@
 						android:orientation="vertical">
 					</LinearLayout>
 				</LinearLayout>
-			</nerd.tuxmobil.fahrplan.congress.HorizontalSnapScrollView>
+			</chaos.fahrplan.congress.HorizontalSnapScrollView>
 		</LinearLayout>
-	</nerd.tuxmobil.fahrplan.congress.CustomScrollView>
+	</chaos.fahrplan.congress.CustomScrollView>
 	<LinearLayout android:id="@+id/statusLine"
 		android:layout_width="match_parent" android:layout_height="wrap_content"
 		android:background="#B0000000" android:layout_alignParentBottom="true">

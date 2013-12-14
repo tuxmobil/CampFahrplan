@@ -1,4 +1,4 @@
-package nerd.tuxmobil.fahrplan.congress;
+package chaos.fahrplan.congress;
 
 import java.io.StringReader;
 import java.util.ArrayList;

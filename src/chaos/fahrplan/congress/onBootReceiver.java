@@ -1,4 +1,4 @@
-package nerd.tuxmobil.fahrplan.congress;
+package chaos.fahrplan.congress;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;

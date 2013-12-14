@@ -1,6 +1,6 @@
-package nerd.tuxmobil.fahrplan.congress;
+package chaos.fahrplan.congress;
 
-import nerd.tuxmobil.fahrplan.congress.TrustManagerFactory;
+import chaos.fahrplan.congress.TrustManagerFactory;
 
 import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.conn.scheme.LayeredSocketFactory;

@@ -1,4 +1,4 @@
-package nerd.tuxmobil.fahrplan.congress;
+package chaos.fahrplan.congress;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,8 +7,8 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
 import com.actionbarsherlock.app.SherlockActivity;
 
-import nerd.tuxmobil.fahrplan.congress.CustomHttpClient.HTTP_STATUS;
-import nerd.tuxmobil.fahrplan.congress.MyApp.TASKS;
+import chaos.fahrplan.congress.CustomHttpClient.HTTP_STATUS;
+import chaos.fahrplan.congress.MyApp.TASKS;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlarmManager;
@@ -1102,7 +1102,7 @@ public class Fahrplan extends SherlockActivity implements OnClickListener, OnNav
 					.setText(getString(R.string.appVersion)
 							+ " "
 							+ getApplicationContext().getPackageManager()
-									.getPackageInfo("nerd.tuxmobil.fahrplan.congress", 0).versionName);
+									.getPackageInfo("chaos.fahrplan.congress", 0).versionName);
 		} catch (NameNotFoundException e) {
 			e.printStackTrace();
 			text.setText("");
