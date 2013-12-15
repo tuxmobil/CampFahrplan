@@ -2,6 +2,7 @@ package chaos.fahrplan.congress;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.TimeZone;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
@@ -230,9 +231,18 @@ public class Fahrplan extends SherlockActivity implements OnClickListener, OnNav
 		intent.putExtra(CalendarContract.Events.EVENT_LOCATION, l.room);
 
 		Time time = l.getTime();
-		long when = time.normalize(true);
+		long when = time.normalize(true);  
 		intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, when);
 		intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, when + (l.duration * 60000));
+
+		// TimeZone information doesn't work with Intent/putExtra approach
+		// http://developer.android.com/guide/topics/providers/calendar-provider.html#intent-insert
+		// "Note that this rule does not apply if you're inserting an event through the INSERT Intent, 
+		// described in Using an intent to insert an event—in that scenario, a default time zone is supplied."
+//		String timezone = TimeZone.getTimeZone("GMT+1").getID();
+//		intent.putExtra(CalendarContract.Events.EVENT_TIMEZONE, timezone);
+//		intent.putExtra(CalendarContract.Events.EVENT_END_TIMEZONE, timezone);
+
 		context.startActivity(intent);
 	}
 
