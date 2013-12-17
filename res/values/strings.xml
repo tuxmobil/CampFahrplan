@@ -59,4 +59,5 @@
 	<string name="flag_as_favorite">Flag as important</string>
 	<string name="unflag_as_favorite">Remove important flag</string>
 	<string name="uptodate">Schedule is up to date.</string>
+	<string name="datetimelocation">Day %1$d - %2$02d:%3$02d - %4$s</string>
 </resources>

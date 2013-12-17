@@ -71,6 +71,15 @@ public class EventDetail extends SherlockActivity {
         t.setTypeface(black);
         t.setText(intent.getStringExtra("spkr"));
 
+        t = (TextView)findViewById(R.id.dateTimeLocation);
+        t.setTypeface(black);
+        int time = intent.getIntExtra("time", 0);
+        String dateTimeLocation = getResources().getString(R.string.datetimelocation, 
+        		day,
+        		time/60, time%60,
+        		intent.getStringExtra("room"));
+        t.setText(dateTimeLocation);
+        
         t = (TextView)findViewById(R.id.abstractt);
         t.setTypeface(bold);
         String s = intent.getStringExtra("abstract");

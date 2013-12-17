@@ -34,8 +34,21 @@
             android:id="@+id/speakers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingBottom="16dp"
             android:paddingTop="16dp"
+            android:text="TextView"
+            android:textAllCaps="true"
+            android:textColor="#000000"
+            android:textSize="13sp"
+            android:typeface="normal" >
+
+</TextView>
+
+        
+        <TextView
+            android:id="@+id/dateTimeLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="16dp"
             android:text="TextView"
             android:textAllCaps="true"
             android:textColor="#000000"

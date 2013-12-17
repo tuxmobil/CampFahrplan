@@ -997,6 +997,7 @@ public class Fahrplan extends SherlockActivity implements OnClickListener, OnNav
 		intent.putExtra("eventid", lecture.lecture_id);
 		intent.putExtra("time", lecture.startTime);
 		intent.putExtra("day", mDay);
+		intent.putExtra("room", lecture.room);
 		startActivityForResult(intent, MyApp.EVENTVIEW);
 	}
 
