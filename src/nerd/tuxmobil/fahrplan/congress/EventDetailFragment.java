@@ -97,7 +97,7 @@ public class EventDetailFragment extends SherlockFragment {
 	        locale = getResources().getConfiguration().locale;
 
 	        FahrplanFragment.loadLectureList(getSherlockActivity(), day, false);
-	        lecture = eventid2Lecture(event_id);
+//	        lecture = eventid2Lecture(event_id);
 
 	        TextView t = (TextView)view.findViewById(R.id.title);
 	        t.setTypeface(boldCondensed);
@@ -154,6 +154,8 @@ public class EventDetailFragment extends SherlockFragment {
 			item = menu.findItem(R.id.item_add_to_calendar);
 			if (item != null) item.setVisible(false);
 		}
+                lecture = eventid2Lecture(event_id);
+
 		if (lecture != null) {
 			if (lecture.highlight) {
 				item = menu.findItem(R.id.item_fav);
