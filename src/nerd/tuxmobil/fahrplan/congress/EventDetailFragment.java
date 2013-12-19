@@ -20,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
@@ -146,6 +147,10 @@ public class EventDetailFragment extends SherlockFragment {
 	        }
     	}
         activity.setResult(SherlockFragmentActivity.RESULT_CANCELED);
+
+        final ActionBar actionBar = activity.getSupportActionBar();
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -229,6 +234,9 @@ public class EventDetailFragment extends SherlockFragment {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Lecture l;
 		switch (item.getItemId()) {
+		case android.R.id.home:
+			closeView();
+			return true;
 		case R.id.item_feedback:
 			StringBuilder sb = new StringBuilder();
 			sb.append(feedbackURL);
@@ -275,13 +283,17 @@ public class EventDetailFragment extends SherlockFragment {
 			refreshEventMarkers();
 			return true;
 		case R.id.item_close:
-			SherlockFragmentActivity activity = getSherlockActivity();
-			if ((activity != null) && (activity instanceof OnCloseDetailListener)) {
-				((OnCloseDetailListener)activity).closeDetailView();
-			}
+			closeView();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	protected void closeView() {
+		SherlockFragmentActivity activity = getSherlockActivity();
+		if ((activity != null) && (activity instanceof OnCloseDetailListener)) {
+			((OnCloseDetailListener)activity).closeDetailView();
+		}
 	}
 
 	@Override

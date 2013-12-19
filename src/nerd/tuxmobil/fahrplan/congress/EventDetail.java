@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentTransaction;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
-public class EventDetail extends SherlockFragmentActivity {
+public class EventDetail extends SherlockFragmentActivity implements OnCloseDetailListener {
 
 	@Override
 	protected void onCreate(Bundle arg0) {
@@ -36,4 +36,10 @@ public class EventDetail extends SherlockFragmentActivity {
 			fragmentTransaction.commit();
 		}
 	}
+
+	@Override
+	public void closeDetailView() {
+		finish();
+	}
+
 }
