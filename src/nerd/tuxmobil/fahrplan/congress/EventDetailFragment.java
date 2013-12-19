@@ -2,17 +2,11 @@ package nerd.tuxmobil.fahrplan.congress;
 
 import java.util.Locale;
 
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
@@ -25,6 +19,13 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 
 interface OnCloseDetailListener {
 	public void closeDetailView();
@@ -87,16 +88,19 @@ public class EventDetailFragment extends SherlockFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
     	super.onViewCreated(view, savedInstanceState);
 
+    	final SherlockFragmentActivity activity = getSherlockActivity();
+    	final AssetManager assetManager = activity.getAssets();
+
     	if (hasArguments) {
-			boldCondensed = Typeface.createFromAsset(getSherlockActivity().getAssets(), "Roboto-BoldCondensed.ttf");
-			black = Typeface.createFromAsset(getSherlockActivity().getAssets(), "Roboto-Black.ttf");
-			light = Typeface.createFromAsset(getSherlockActivity().getAssets(), "Roboto-Light.ttf");
-			regular = Typeface.createFromAsset(getSherlockActivity().getAssets(), "Roboto-Regular.ttf");
-			bold = Typeface.createFromAsset(getSherlockActivity().getAssets(), "Roboto-Bold.ttf");
+			boldCondensed = Typeface.createFromAsset(assetManager, "Roboto-BoldCondensed.ttf");
+			black = Typeface.createFromAsset(assetManager, "Roboto-Black.ttf");
+			light = Typeface.createFromAsset(assetManager, "Roboto-Light.ttf");
+			regular = Typeface.createFromAsset(assetManager, "Roboto-Regular.ttf");
+			bold = Typeface.createFromAsset(assetManager, "Roboto-Bold.ttf");
 
 	        locale = getResources().getConfiguration().locale;
 
-	        FahrplanFragment.loadLectureList(getSherlockActivity(), day, false);
+	        FahrplanFragment.loadLectureList(activity, day, false);
 	        lecture = eventid2Lecture(event_id);
 
 	        TextView t = (TextView)view.findViewById(R.id.title);
@@ -142,7 +146,11 @@ public class EventDetailFragment extends SherlockFragment {
 	        	t.setVisibility(View.GONE);
 	        }
     	}
-        getSherlockActivity().setResult(SherlockFragmentActivity.RESULT_CANCELED);
+        activity.setResult(SherlockFragmentActivity.RESULT_CANCELED);
+
+        final ActionBar actionBar = activity.getSupportActionBar();
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -226,6 +234,9 @@ public class EventDetailFragment extends SherlockFragment {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Lecture l;
 		switch (item.getItemId()) {
+		case android.R.id.home:
+			closeView();
+			return true;
 		case R.id.item_feedback:
 			StringBuilder sb = new StringBuilder();
 			sb.append(feedbackURL);
@@ -272,13 +283,17 @@ public class EventDetailFragment extends SherlockFragment {
 			refreshEventMarkers();
 			return true;
 		case R.id.item_close:
-			SherlockFragmentActivity activity = getSherlockActivity();
-			if ((activity != null) && (activity instanceof OnCloseDetailListener)) {
-				((OnCloseDetailListener)activity).closeDetailView();
-			}
+			closeView();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	protected void closeView() {
+		SherlockFragmentActivity activity = getSherlockActivity();
+		if ((activity != null) && (activity instanceof OnCloseDetailListener)) {
+			((OnCloseDetailListener)activity).closeDetailView();
+		}
 	}
 
 	@Override

@@ -92,6 +92,8 @@ public class MainActivity extends SherlockFragmentActivity implements OnParseCom
 			FragmentManager fm = getSupportFragmentManager();
 			Fragment detail = fm.findFragmentByTag("detail");
 			if (detail != null) {
+				getSupportActionBar().setHomeButtonEnabled(true);
+				getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 				FragmentTransaction ft = fm.beginTransaction();
 				ft.remove(detail).commit();
 			}
