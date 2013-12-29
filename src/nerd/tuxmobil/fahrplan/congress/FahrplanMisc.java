@@ -1,7 +1,11 @@
 package nerd.tuxmobil.fahrplan.congress;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
+import nerd.tuxmobil.fahrplan.congress.FahrplanContract.AlarmsTable;
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -15,7 +19,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.net.Uri;
 import android.provider.CalendarContract;
-import android.text.format.DateFormat;
 import android.text.format.Time;
 import android.widget.Toast;
 
@@ -123,8 +126,10 @@ public class FahrplanMisc {
 		sendIntent.setAction(Intent.ACTION_SEND);
 		StringBuilder sb = new StringBuilder();
 		Time time = l.getTime();
-		sb.append(l.title).append("\n").append(DateFormat.format("E, MMMM dd, yyyy hh:mm", time.toMillis(true)));
-		sb.append(", ").append(l.room).append("\n\n").append("http://events.ccc.de/congress/2013/Fahrplan/events/").append(l.lecture_id).append(".en.html");
+		sb.append(l.title).append("\n").append(SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.FULL, SimpleDateFormat.SHORT).format(new Date(time.toMillis(true))));
+		sb.append(", ").append(l.room).append("\n\n");
+		final String eventUrl = getEventUrl(context, l.lecture_id);
+		sb.append(eventUrl);
 		sendIntent.putExtra(Intent.EXTRA_TEXT, sb.toString());
 		sendIntent.setType("text/plain");
 		context.startActivity(sendIntent);
@@ -137,6 +142,16 @@ public class FahrplanMisc {
 		// TODO The event url can be localized by providing individual values
 		// for `schedule_event_part` in `values` and `values-de`.
 		sb.append(context.getString(R.string.schedule_event_part, eventId));
+		return sb.toString();
+	}
+
+	public static String getCalendarDescription(final Context context, final Lecture lecture) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(lecture.description);
+		sb.append("\n\n");
+		final String eventOnline = context.getString(R.string.event_online);
+		sb.append(eventOnline + ": ");
+		sb.append(getEventUrl(context, lecture.lecture_id));
 		return sb.toString();
 	}
 
@@ -156,6 +171,8 @@ public class FahrplanMisc {
 		}
 		intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, when);
 		intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, when + (l.duration * 60000));
+		final String description = getCalendarDescription(context, l);
+		intent.putExtra(CalendarContract.Events.DESCRIPTION, description);
 		try {
 			context.startActivity(intent);
 			return;
@@ -176,9 +193,14 @@ public class FahrplanMisc {
 		Cursor cursor;
 
 		try {
-		cursor = db.query("alarms", AlarmsDBOpenHelper.allcolumns,
-					"eventid=?", new String[] { lecture.lecture_id }, null,
-					null, null);
+		cursor = db.query(
+				AlarmsTable.NAME,
+				AlarmsDBOpenHelper.allcolumns,
+				AlarmsTable.Columns.EVENT_ID + "=?",
+				new String[] { lecture.lecture_id },
+				null,
+				null,
+				null);
 		} catch (SQLiteException e) {
 			e.printStackTrace();
 			MyApp.LogDebug("delete alarm","failure on alarm query");
@@ -205,7 +227,7 @@ public class FahrplanMisc {
 		long startTime = cursor.getLong(5);
 		intent.putExtra("startTime", startTime);
 		// delete any previous alarms of this lecture
-		db.delete("alarms", "eventid=?", new String[] { lecture.lecture_id });
+		db.delete(AlarmsTable.NAME, AlarmsTable.Columns.EVENT_ID + "=?", new String[] { lecture.lecture_id });
 		db.close();
 
 		intent.setAction("de.machtnix.fahrplan.ALARM");
@@ -220,8 +242,8 @@ public class FahrplanMisc {
 		lecture.has_alarm = false;
 	}
 
-	public static void addAlarm(Context context, Lecture lecture, int alarmTime) {
-		int[] alarm_times = { 0, 5, 10, 15, 30, 5, 60 };
+	public static void addAlarm(Context context, Lecture lecture, int alarmTimesIndex) {
+		int[] alarm_times = { 0, 5, 10, 15, 30, 45, 60 };
 		long when;
 		Time time;
 		long startTime;
@@ -234,7 +256,7 @@ public class FahrplanMisc {
 			startTime = time.normalize(true);
 			when = time.normalize(true);
 		}
-		when -= (alarm_times[alarmTime] * 60 * 1000);
+		when -= (alarm_times[alarmTimesIndex] * 60 * 1000);
 
 		// DEBUG
 		// when = System.currentTimeMillis() + (30 * 1000);
@@ -261,6 +283,8 @@ public class FahrplanMisc {
 		// Set new alarm
 		alarmManager.set(AlarmManager.RTC_WAKEUP, when, pendingintent);
 
+		int alarmTimeInMin = alarm_times[alarmTimesIndex];
+
 		// write to DB
 
 		AlarmsDBOpenHelper alarmDB = new AlarmsDBOpenHelper(context);
@@ -270,18 +294,20 @@ public class FahrplanMisc {
 		// delete any previous alarms of this lecture
 		try {
 			db.beginTransaction();
-			db.delete("alarms", "eventid=?", new String[] { lecture.lecture_id });
+			db.delete(AlarmsTable.NAME, AlarmsTable.Columns.EVENT_ID + "=?", new String[] { lecture.lecture_id });
 
 			ContentValues values = new ContentValues();
 
-			values.put("eventid", Integer.parseInt(lecture.lecture_id));
-			values.put("title", lecture.title);
-			values.put("time", when);
-			values.put("timeText", time.format("%Y-%m-%d %H:%M"));
-			values.put("displayTime", startTime);
-			values.put("day", lecture.day);
+			values.put(AlarmsTable.Columns.EVENT_ID, Integer.parseInt(lecture.lecture_id));
+			values.put(AlarmsTable.Columns.EVENT_TITLE, lecture.title);
+			values.put(AlarmsTable.Columns.ALARM_TIME_IN_MIN, alarmTimeInMin);
+			values.put(AlarmsTable.Columns.TIME, when);
+			DateFormat df = SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.SHORT, SimpleDateFormat.SHORT);
+			values.put(AlarmsTable.Columns.TIME_TEXT, df.format(new Date(when)));
+			values.put(AlarmsTable.Columns.DISPLAY_TIME, startTime);
+			values.put(AlarmsTable.Columns.DAY, lecture.day);
 
-			db.insert("alarms", null, values);
+			db.insert(AlarmsTable.NAME, null, values);
 			db.setTransactionSuccessful();
 		} catch (SQLException e) {
 		} finally {
@@ -333,7 +359,7 @@ public class FahrplanMisc {
 		if ((now >= MyApp.first_day_start) && (now < MyApp.last_day_end)) {
 			interval = 2 * AlarmManager.INTERVAL_HOUR;
 			next_fetch = now + interval;
-		} if (now >= MyApp.last_day_end) {
+		} else if (now >= MyApp.last_day_end) {
 			MyApp.LogDebug(LOG_TAG, "cancel alarm post congress");
 			alarmManager.cancel(pendingintent);
 			return 0;
