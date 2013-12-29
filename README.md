@@ -70,6 +70,7 @@ ant release 2>&1 | tee build.log
 
 **install the APK into emulator or physical device**
 ``` bash
+# replace x.y.z with the value of "android:versionName" in the file AndroidManifest.xml
 cd ${GIT_REPOS_HOME}/CampFahrplan/bin
 adb install 30c3_fahrplan-x.yy.z.apk
 ```
