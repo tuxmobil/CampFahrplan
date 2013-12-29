@@ -27,7 +27,7 @@ export PATH=${ADK_HOME}/tools:${ADK_HOME}/platform-tools:$PATH
 **get the source**
 
 ``` bash
-# your prevered git repository location
+# your preferred git repository location
 cd ${GIT_REPOS_HOME}
 git clone https://github.com/tuxmobil/CampFahrplan.git
 git clone https://github.com/JakeWharton/ActionBarSherlock.git
