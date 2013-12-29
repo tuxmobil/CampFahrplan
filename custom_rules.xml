@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+    <target name="-set-release-version-number">
+        <!-- see http://ant.apache.org/manual/Tasks/xmlproperty.html -->
+        <xmlproperty file="AndroidManifest.xml"
+                     prefix="version"
+                     collapseAttributes="true"/>
+
+        <!-- see target "-set-release-mode" in ${sdk.dir}/tools/ant/build.xml -->
+        <property name="out.packaged.file"
+                  location="${out.absolute.dir}/${ant.project.name}-${version.manifest.android:versionName}-unsigned.apk" />
+        <property name="out.final.file"
+                  location="${out.absolute.dir}/${ant.project.name}-${version.manifest.android:versionName}.apk" />
+    </target>
+
+    <target name="-set-release-mode" depends="-set-release-version-number, android_rules.-set-release-mode">
+        <echo>execute target: ${build.target}"></echo>
+    </target>
+</project>
