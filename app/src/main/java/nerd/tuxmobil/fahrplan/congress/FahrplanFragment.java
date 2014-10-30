@@ -1147,8 +1147,10 @@ public class FahrplanFragment extends SherlockFragment implements
     public boolean onNavigationItemSelected(int itemPosition, long itemId) {
         if (itemPosition < MyApp.numdays) {
             chooseDay(itemPosition);
+            fillTimes();
             return true;
         }
+        fillTimes();
         return false;
     }
 
