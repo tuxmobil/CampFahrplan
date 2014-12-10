@@ -70,6 +70,8 @@ public class UpdateService extends IntentService
 
         nm.notify(2, notify);
 
+        WearableHelper.updateLectures(this, version, changesList);
+
         stopSelf();
     }
 

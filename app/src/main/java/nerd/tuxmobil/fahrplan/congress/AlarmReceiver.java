@@ -66,6 +66,8 @@ public final class AlarmReceiver extends BroadcastReceiver {
 
             nm.notify(1, notify);
 
+            WearableHelper.displayAlarm(context, lecture_id);
+
             // Clear from alarmDB
 
             AlarmsDBOpenHelper lecturesDB = new AlarmsDBOpenHelper(context);
