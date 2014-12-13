@@ -23,6 +23,7 @@
     <string name="load_data">Laden</string>
     <string name="choose_day">Tag wählen</string>
     <string name="day">Tag</string>
+    <string name="changelog">Versionsinformationen</string>
     <string name="about">Info</string>
     <string name="fahrplan">Fahrplan</string>
     <string name="appVersion">App Version %s</string>
@@ -53,7 +54,7 @@
     <string name="set_alarm">Alarm setzen</string>
 	<string name="libraries">
 		Die Anwendung nutzt folgende Bibliotheken: ActionBarSherlock,
-		Google Support Library v4
+		Google Support Library v4, ckChangeLog
 	</string>
     <string name="copyright_notes">Copyright 2014 Daniel Dorau.\nCopyright 2014 SubOptimal, entropynil, johnjohndoe.\nPortions Copyright 2008-2011 The K-9 Dog Walkers and 2006-2013 the Android Open Source Project.</string>
     <string name="copyright_logo">30C3-Artwork von <![CDATA[<a href="http://evelynschubert.com/">Evelyn Schubert</a>]]>, unter <![CDATA[<a href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US">CC BY-SA 3.0</a>]]> lizenziert</string>

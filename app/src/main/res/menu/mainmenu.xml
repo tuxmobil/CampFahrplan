@@ -10,24 +10,34 @@
             android:id="@+id/item_alarms"
             android:icon="@drawable/ic_menu_alarmclock"
             android:title="@string/alarms"
+            android:orderInCategory="30"
             android:titleCondensed="@string/alarms">
     </item>
     <item
             android:id="@+id/item_settings"
             android:icon="@drawable/ic_menu_settings"
             android:showAsAction="never"
+            android:orderInCategory="40"
             android:title="@string/settings"
             android:titleCondensed="@string/settings">
     </item>
     <item
+            android:id="@+id/item_changelog"
+            android:showAsAction="never"
+            android:orderInCategory="60"
+            android:title="@string/changelog"
+            android:titleCondensed="@string/changelog">
+    </item>
+    <item
             android:id="@+id/item_about"
             android:icon="@drawable/ic_menu_about"
-            android:orderInCategory="1"
+            android:orderInCategory="90"
             android:title="@string/about"
             android:titleCondensed="@string/about">
     </item>
     <item
         android:id="@+id/item_changes"
+        android:orderInCategory="50"
         android:title="@string/schedule_changes"
         android:titleCondensed="@string/schedule_changes">
     </item>

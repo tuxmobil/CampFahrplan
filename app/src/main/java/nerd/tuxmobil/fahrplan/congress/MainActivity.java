@@ -8,6 +8,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -17,9 +18,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.format.Time;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import de.cketti.library.changelog.ChangeLog;
 import nerd.tuxmobil.fahrplan.congress.CustomHttpClient.HTTP_STATUS;
 import nerd.tuxmobil.fahrplan.congress.FahrplanContract.FragmentTags;
 import nerd.tuxmobil.fahrplan.congress.MyApp.TASKS;
@@ -104,6 +107,7 @@ public class MainActivity extends SherlockFragmentActivity
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         if (prefs.getBoolean(BundleKeys.PREFS_CHANGES_SEEN, true) == false) changesDialog();
+        showChangeLogDialog();
     }
 
     public void parseFahrplan() {
@@ -294,6 +298,9 @@ public class MainActivity extends SherlockFragmentActivity
                 intent = new Intent(this, Prefs.class);
                 startActivity(intent);
                 return true;
+            case R.id.item_changelog:
+                showFullChangeLogDialog();
+                return true;
             case R.id.item_changes:
                 FrameLayout sidePane = (FrameLayout) findViewById(R.id.detail);
                 if (sidePane == null) {
@@ -414,4 +421,28 @@ public class MainActivity extends SherlockFragmentActivity
         }
         supportInvalidateOptionsMenu();
     }
+
+    public void showChangeLogDialog() {
+        final ChangeLog changeLog = new DarkThemeChangeLog(this);
+        if (changeLog.isFirstRun()) {
+            changeLog.getLogDialog().show();
+        }
+    }
+
+    public void showFullChangeLogDialog() {
+        final ChangeLog changeLog = new DarkThemeChangeLog(this);
+        changeLog.getFullLogDialog().show();
+    }
+
+    public static class DarkThemeChangeLog extends ChangeLog {
+
+        public static final String DARK_THEME_CSS =
+                "body { color: #ffffff; background-color: #282828; }" + "\n" + DEFAULT_CSS;
+
+        public DarkThemeChangeLog(Context context) {
+            super(new ContextThemeWrapper
+                    (context, R.style.Theme_Congress), DARK_THEME_CSS);
+        }
+    }
+
 }
