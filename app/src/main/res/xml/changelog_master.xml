@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<changelog>
+    <release
+        version="1.29.5 (2013-12-30 12:02:30)"
+        versioncode="29">
+        <change>
+            Fix display/deletion of alarms.
+        </change>
+    </release>
+    <release
+        version="1.29.4 (2013-12-29 00:53:17)"
+        versioncode="28">
+        <change>
+            Add event description when an item is added to a calendar.
+        </change>
+        <change>
+            Add icon to alarm list which shows the individual alarm minutes.
+        </change>
+        <change>
+            Improve localization of lecture times in share action/calendar list.
+        </change>
+    </release>
+    <release
+        version="1.29.3 (2013-12-28 20:02:54)"
+        versioncode="27">
+        <change>
+            Update lecture feedback URL to 30C3 now that the feedback system is alive.
+        </change>
+    </release>
+    <release
+        version="1.29.2 (2013-12-28 10:14:12)"
+        versioncode="26">
+        <change>
+            Handle invalid schedule URLs.
+        </change>
+        <change>
+            Fix alarm time for 45 minutes.
+        </change>
+        <change>
+            Fix invalid share url for lecture.
+        </change>
+        <change>
+            Fix interval for automatic schedule reload.
+        </change>
+    </release>
+    <release
+        version="1.29.1 (2013-12-26 00:05:34)"
+        versioncode="25">
+        <change>
+            Fix SSL certifcate check.
+        </change>
+        <change>
+            Add links to the source code and issues pages.
+        </change>
+        <change>
+            Add up navigation to alarm list.
+        </change>
+        <change>
+            Add room to detail view.
+        </change>
+    </release>
+    <release
+        version="1.29 (2013-12-24 21:55:03)"
+        versioncode="24">
+        <change>
+            Support dynamic number of rooms.
+        </change>
+        <change>
+            Fix landscape layout to always fill the available space.
+        </change>
+        <change>
+            Improve horizontal scroller for dynamic resizing.
+        </change>
+        <change>
+            Avoid drawing rooms without lectures.
+        </change>
+        <change>
+            Fix overlapping events (bug in content XML).
+        </change>
+        <change>
+            Display date and time of event on details view.
+        </change>
+        <change>
+            Fix scrolling to lecture from alarm notification.
+        </change>
+    </release>
+    <release
+        version="1.28.1 (2013-12-23 12:14:23)"
+        versioncode="23">
+        <change>
+            Fix crash on up navigation on Android 2.x devices.
+        </change>
+    </release>
+    <release
+        version="1.28 (2013-12-22 00:28:48)"
+        versioncode="22">
+        <change>
+            Add new preference for automatic updates (default: disabled).
+        </change>
+        <change>
+            Replaced notification icon with this year's rocket design.
+        </change>
+        <change>
+            Fix speaker name in standalone version of detail view.
+        </change>
+        <change>
+            Improve rotation savity.
+        </change>
+        <change>
+            Display schedule in different time zones.
+        </change>
+        <change>
+            Replace calendar icon with nicer graphic.
+        </change>
+        <change>
+            Show error message when parsing of the schedule fails.
+        </change>
+        <change>
+            Fix action bar in detail view for Android 2.x.
+        </change>
+        <change>
+            Fix indeterminate progress bar for Android 2.x.
+        </change>
+        <change>
+            Add link to event details which
+            allows to visit corresponding website.
+        </change>
+        <change>
+            Display alarms information if there is no entry.
+        </change>
+        <change>
+            Update contributors in copyright note.
+        </change>
+        <change>
+            Add up navigation to event detail view.
+        </change>
+        <change>
+            Try to optimize horizontal scroller for
+            devices with unusual screen resolution
+        </change>
+    </release>
+</changelog>

@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<changelog>
+    <release
+        version="1.29.5 (2013-12-30 12:02:30)"
+        versioncode="29">
+        <change>
+            Fehler bei der Anzeige und beim Löschen
+            von Alarm-Einträgen behoben.
+        </change>
+    </release>
+    <release
+        version="1.29.4 (2013-12-29 00:53:17)"
+        versioncode="28">
+        <change>
+            Kalendereinträge um Vortragsbeschreibung erweitert.
+        </change>
+        <change>
+            Kreis-Symbol in Alarmliste hinzugefügt,
+            um die individuellen Alarm-Minuten anzuzeigen.
+        </change>
+        <change>
+            Lokalisierung der Vortragszeiten in Teilen-Funktion
+            und Kalenderliste überarbeitet.
+        </change>
+    </release>
+    <release
+        version="1.29.3 (2013-12-28 20:02:54)"
+        versioncode="27">
+        <change>
+            Adresse für Vortragsbewertungen aktualisiert
+            (30C3-System ist aktiv).
+        </change>
+    </release>
+    <release
+        version="1.29.2 (2013-12-28 10:14:12)"
+        versioncode="26">
+        <change>
+            Fehlerbehandlung bei ungültiger Fahrplanadresse.
+        </change>
+        <change>
+            Alarmzeit für "45 Minuten" Eintrag korrigiert.
+        </change>
+        <change>
+            Ungültige Vortragsadresse für Teilen-Funktion repariert.
+        </change>
+        <change>
+            Fehler bei automatischer Fahrplan-Aktualisierung behoben.
+        </change>
+    </release>
+    <release
+        version="1.29.1 (2013-12-26 00:05:34)"
+        versioncode="25">
+        <change>
+            Fehler bei der Überprüfung des SSL-Zertifikats behoben.
+        </change>
+        <change>
+            Verweise auf Quellcode- und Fehlermelde-Seiten hinzugefügt.
+        </change>
+        <change>
+            Hoch-Navigation in Alarmliste hinzugefügt.
+        </change>
+        <change>
+            Detailansicht um Raumbezeichnung ergänzt.
+        </change>
+    </release>
+    <release
+        version="1.29 (2013-12-24 21:55:03)"
+        versioncode="24">
+        <change>
+            Unterstützung für eine variable Anzahl von Räumen implementiert.
+        </change>
+        <change>
+            Ansicht im Querformat nutzt verfügbaren Platz.
+        </change>
+        <change>
+            Verbesserung der horizontalen Bildlaufleiste
+            bei dynamischen Größenänderungen.
+        </change>
+        <change>
+            Räume ohne Vorträge werden nicht mehr dargestellt.
+        </change>
+        <change>
+            Fehler bei sich überschneidenen Vorträgen behoben
+            (Fehler in XML-Datei).
+        </change>
+        <change>
+            Detailansicht um die Anzeige von Datum und Zeit ergänzt.
+        </change>
+        <change>
+            Beim Auswählen einer Alarm-Benachrichtigung wird
+            wieder zum richtigen Vortrag gescrollt.
+        </change>
+    </release>
+    <release
+        version="1.28.1 (2013-12-23 12:14:23)"
+        versioncode="23">
+        <change>
+            Fehler bei Benutzung der Hoch-Navigation behoben (Android 2.x).
+        </change>
+    </release>
+    <release
+        version="1.28 (2013-12-22 00:28:48)"
+        versioncode="22">
+        <change>
+            Automatische Hintergrundaktualisierung in
+            Einstellungen hinzugefügt (standardmäßig deaktiviert).
+        </change>
+        <change>
+            Benachrichtigungssymbol mit aktueller Raketen-Grafik aktualisiert.
+        </change>
+        <change>
+            Sprechername in der Einzeldarstellung der Detailansicht repariert.
+        </change>
+        <change>
+            Verhalten bei Geräterotation verbessert.
+        </change>
+        <change>
+            Fahrplan für die Anzeige in verschiedenen Zeitzonen optimiert.
+        </change>
+        <change>
+            Kalendersymbol mit schönerer Grafik aktualisiert.
+        </change>
+        <change>
+            Spezifische Meldung bei Einlesefehlern des Fahrplans hinzugefügt.
+        </change>
+        <change>
+            ActionBar in Detailansicht repariert (Android 2.x.)
+        </change>
+        <change>
+            Unendlichen Fortschrittsbalken repariert (Android 2.x.)
+        </change>
+        <change>
+            Verweis auf assozierte Webseite in Detailansicht ergänzt.
+        </change>
+        <change>
+            Anzeige genereller Alarminformationen bei 0 Einträgen.
+        </change>
+        <change>
+            Liste der Projektbeteiligten aktualisiert.
+        </change>
+        <change>
+            Hoch-Navigation für Detailansicht hinzugefügt.
+        </change>
+        <change>
+            Optimierung der horizontalen Bildlaufleiste
+            für Geräte mit nicht-standardisierter
+            Bildschirmauflösung (experimentell)
+        </change>
+    </release>
+</changelog>

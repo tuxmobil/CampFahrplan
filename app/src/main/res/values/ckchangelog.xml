@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <!--
+        Overwrites ckChangeLog internal settings for all languages.
+    -->
+    <string name="changelog_full_title">@string/changelog</string>
+    <string name="changelog_title">This is new</string>
+    <string name="changelog_ok_button">OK</string>
+    <string name="changelog_show_full">More &#8230;</string>
+
+    <string name="changelog_version_format">
+        Version <xliff:g id="version_name">%s</xliff:g>
+    </string>
+</resources>
