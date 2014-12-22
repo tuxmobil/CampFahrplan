@@ -140,19 +140,14 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         LogUtil.debug("onDataChanged: received data = " + events);
 
         for (DataEvent event : events) {
-            if (event.getType() == DataEvent.TYPE_CHANGED) {
-                String path = event.getDataItem().getUri().getPath();
-
-
-
-            } else if (event.getType() == DataEvent.TYPE_DELETED) {
-
-            } else {
-
+            if (event.getDataItem().getUri().getPath().equals(Constants.PATH_LECTURE_DATA)) {
+                fillPagerWithData(event.getDataItem().getData());
             }
         }
+    }
 
-//        pager.setAdapter(new SampleGridPagerAdapter(this, getFragmentManager()));
-//        dotsPageIndicator.setPager(pager);
+    private void fillPagerWithData(byte[] data) {
+        pager.setAdapter(new SampleGridPagerAdapter(this, getFragmentManager()));
+        dotsPageIndicator.setPager(pager);
     }
 }
