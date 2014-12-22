@@ -20,10 +20,18 @@ import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.wearable.DataApi;
 import com.google.android.gms.wearable.MessageEvent;
+import com.google.android.gms.wearable.PutDataMapRequest;
+import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 import com.google.android.gms.wearable.WearableListenerService;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -32,6 +40,10 @@ public class WearAppListenerService extends WearableListenerService {
     private static final String TAG = "CampFahrplan:WearAppListenerService";
 
     public static final String PATH_REQUEST_LECTURE_DATA = "/request-lecture-data";
+
+    public static final String PATH_LECTURE_DATA = "/lecture-data";
+
+    public static final String KEY_LECTURE_DATA = "lectures";
 
     private GoogleApiClient googleApiClient;
 
@@ -71,6 +83,52 @@ public class WearAppListenerService extends WearableListenerService {
             return;
         }
 
+        // filter out lectures which are completed or too far in the future
+        List<Lecture> filteredLectures = filterLectures(lectures);
 
+        PutDataMapRequest dataMapRequest = PutDataMapRequest.create(PATH_LECTURE_DATA);
+        dataMapRequest.getDataMap().putStringArray(KEY_LECTURE_DATA, buildArrayFromLectures(filteredLectures));
+
+        Wearable.DataApi.putDataItem(googleApiClient, dataMapRequest.asPutDataRequest())
+                .setResultCallback(new ResultCallback<DataApi.DataItemResult>() {
+                    @Override
+                    public void onResult(DataApi.DataItemResult dataItemResult) {
+                        if (!dataItemResult.getStatus().isSuccess()) {
+                            Log.e(TAG, "ERROR: failed to putDataItem, status code: " + dataItemResult.getStatus().getStatusCode());
+                        }
+                    }
+                });
+    }
+
+    private List<Lecture> filterLectures(List<Lecture> lectures) {
+        List<Lecture> results = new ArrayList<>();
+        for (Lecture lecture : lectures) {
+            // TODO implement something here
+            results.add(lecture);
+        }
+
+        return results;
+    }
+
+    private String[] buildArrayFromLectures(List<Lecture> lectures) {
+        List<String> results = new ArrayList<>();
+        for (Lecture lecture : lectures) {
+            JSONObject lectureAsJson = new JSONObject();
+            try {
+                lectureAsJson.put("title", lecture.title);
+                lectureAsJson.put("speakers", lecture.speakers);
+                lectureAsJson.put("highlight", lecture.highlight);
+                lectureAsJson.put("start_time", lecture.relStartTime);
+                lectureAsJson.put("end_time", lecture.relStartTime + lecture.duration);
+                lectureAsJson.put("room", lecture.room);
+                lectureAsJson.put("room_index", lecture.room_index);
+
+                results.add(lectureAsJson.toString());
+            } catch (JSONException e) {
+                Log.e(TAG, "failed building array from lectures (current: " + lecture.lecture_id + ")", e);
+            }
+        }
+
+        return (String[]) results.toArray();
     }
 }
