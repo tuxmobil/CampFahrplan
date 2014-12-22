@@ -103,5 +103,6 @@ android {
 dependencies {
     compile "com.android.support:appcompat-v7:21.0.+"
     compile 'com.afollestad:material-dialogs:0.4.6'
+    compile 'com.google.android.gms:play-services-wearable:6.1.71'
     wearApp project(':wear')
 }
