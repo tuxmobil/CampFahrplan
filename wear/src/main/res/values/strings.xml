@@ -2,7 +2,9 @@
 <resources>
 
     <string name="app_name">Fahrplan</string>
-    <string name="hello_round">Hello Round World!</string>
-    <string name="hello_square">Hello Square World!</string>
+
+    <string name="activity_main_loading_data">Loading data…</string>
+    <string name="activity_main_connection_failed">Connecting to the phone app has failed</string>
+
 
 </resources>
