@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.google.android.gms.wearable.DataMap;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -55,6 +57,26 @@ public class WearHelper {
         }
 
         return results;
+    }
+
+    public static List<DataMap> buildDataMapListFromLectures(List<Lecture> lectures) {
+        List<DataMap> result = new ArrayList<DataMap>(lectures.size());
+
+        for (Lecture lecture : lectures) {
+            DataMap lectureMap = new DataMap();
+
+            lectureMap.putString("title", lecture.title);
+            lectureMap.putString("speakers", lecture.speakers);
+            lectureMap.putBoolean("highlight", lecture.highlight);
+            lectureMap.putLong("start_time", lecture.dateUTC + lecture.startTime); // TODO this is not the right value
+            lectureMap.putLong("end_time", lecture.dateUTC + lecture.startTime + lecture.duration);
+            lectureMap.putString("room", lecture.room);
+            lectureMap.putInt("room_index", lecture.room_index);
+
+            result.add(lectureMap);
+        }
+
+        return result;
     }
 
 }
