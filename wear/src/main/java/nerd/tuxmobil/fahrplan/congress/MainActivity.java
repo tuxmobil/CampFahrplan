@@ -117,10 +117,10 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         Wearable.DataApi.addListener(googleApiClient, this);
 
         // check if lecture data is available ... if not, get the data from the app
-        new AsyncTask<Void, Void, ArrayList<DataMap>>() {
+        new AsyncTask<Void, Void, List<DataMap>>() {
 
             @Override
-            protected ArrayList<DataMap> doInBackground(Void... params) {
+            protected List<DataMap> doInBackground(Void... params) {
                 NodeApi.GetConnectedNodesResult foundNodes = Wearable.NodeApi.getConnectedNodes(googleApiClient).await();
 
                 DataItemBuffer resultBuffer = null;
@@ -144,7 +144,15 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
                         throw new Exception("dataMap is null");
                     }
 
-                    ArrayList<DataMap> lectures = dataMap.getDataMapArrayList(Constants.KEY_LECTURE_DATA);
+                    List<DataMap> lectures = new ArrayList<DataMap>();
+                    for (String dataKey : dataMap.keySet()) {
+                        if (!dataKey.contains(Constants.KEY_LECTURE_DATA)) {
+                            continue;
+                        }
+
+                        lectures.add(dataMap.getDataMap(dataKey));
+                    }
+
                     if (lectures == null) {
                         throw new Exception("no lectures in store");
                     }
@@ -168,7 +176,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
             }
 
             @Override
-            protected void onPostExecute(ArrayList<DataMap> lectures) {
+            protected void onPostExecute(List<DataMap> lectures) {
                 super.onPostExecute(lectures);
 
                 if (lectures == null) {
@@ -214,7 +222,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         }
     }
 
-    private void processData(ArrayList<DataMap> lectures) {
+    private void processData(List<DataMap> lectures) {
         dataProcessorTask = new DataProcessorTask() {
             @Override
             protected void onPostExecute(ProcessorResult processorResult) {

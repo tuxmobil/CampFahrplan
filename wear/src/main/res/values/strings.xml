@@ -7,4 +7,11 @@
     <string name="activity_main_connection_failed">Connecting to the phone app has failed</string>
 
 
+    <string name="card_no_running_lectures_title">No current lectures</string>
+    <string name="card_no_running_lectures_description">No lectures running at the moment</string>
+
+    <string name="card_no_next_lectures_title">No upcoming lectures</string>
+    <string name="card_no_next_lectures_description">There are no upcoming lectures at the moment</string>
+
+
 </resources>
