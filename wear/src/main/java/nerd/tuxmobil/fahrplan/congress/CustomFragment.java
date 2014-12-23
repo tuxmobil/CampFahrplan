@@ -27,6 +27,7 @@ public class CustomFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.custom_fragment, container, false);
+return null;
+//        return inflater.inflate(R.layout.custom_fragment, container, false);
     }
 }
