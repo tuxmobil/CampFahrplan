@@ -4,13 +4,10 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.wearable.view.DotsPageIndicator;
 import android.support.wearable.view.GridViewPager;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowInsets;
 import android.widget.Toast;
@@ -18,10 +15,10 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.data.FreezableUtils;
-import com.google.android.gms.wearable.Asset;
 import com.google.android.gms.wearable.DataApi;
 import com.google.android.gms.wearable.DataEvent;
 import com.google.android.gms.wearable.DataEventBuffer;
+import com.google.android.gms.wearable.DataMap;
 import com.google.android.gms.wearable.DataMapItem;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
@@ -29,7 +26,8 @@ import com.google.android.gms.wearable.Wearable;
 
 import java.util.List;
 
-public class MainActivity extends Activity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, DataApi.DataListener {
+public class MainActivity extends Activity implements GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener, DataApi.DataListener {
 
     private ProgressDialog progressDialog;
 
@@ -43,9 +41,11 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         setContentView(R.layout.activity_main);
 
         progressDialog = ProgressDialog.show(this, getString(R.string.activity_main_loading_data),
-                null, true, true, new DialogInterface.OnCancelListener() {
+                null, true, true);
+        progressDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
-            public void onCancel(DialogInterface dialog) {
+            public void onDismiss(DialogInterface dialog) {
+                LogUtil.info("user dismissed dialog, exiting activity");
                 MainActivity.this.finish();
             }
         });
@@ -79,20 +79,26 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
                 .addOnConnectionFailedListener(this)
                 .addApi(Wearable.API)
                 .build();
+
+        LogUtil.debug("onCreate finished");
     }
 
     @Override
-    protected void onResume() {
+    protected void onStart() {
         super.onResume();
         googleApiClient.connect();
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onStop() {
+        super.onStop();
 
-        Wearable.DataApi.removeListener(googleApiClient, this);
-        googleApiClient.disconnect();
+        if (googleApiClient.isConnected()) {
+            LogUtil.debug("onStop: disconnecting google apis");
+
+            Wearable.DataApi.removeListener(googleApiClient, this);
+            googleApiClient.disconnect();
+        }
     }
 
     @Override
@@ -116,7 +122,6 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
             }
 
         }.execute();
-
     }
 
     @Override
@@ -126,7 +131,9 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        progressDialog.dismiss();
+        Wearable.DataApi.removeListener(googleApiClient, this);
+
+        progressDialog.cancel();
         finish();
 
         Toast.makeText(this, R.string.activity_main_connection_failed, Toast.LENGTH_LONG).show();
@@ -141,13 +148,16 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
 
         for (DataEvent event : events) {
             if (event.getDataItem().getUri().getPath().equals(Constants.PATH_LECTURE_DATA)) {
-                fillPagerWithData(event.getDataItem().getData());
+                final DataMap map = DataMapItem.fromDataItem(event.getDataItem()).getDataMap();
+                fillPagerWithData(map.getStringArray(Constants.KEY_LECTURE_DATA));
             }
         }
     }
 
-    private void fillPagerWithData(byte[] data) {
+    private void fillPagerWithData(String[] lectures) {
         pager.setAdapter(new SampleGridPagerAdapter(this, getFragmentManager()));
         dotsPageIndicator.setPager(pager);
+
+        progressDialog.cancel();
     }
 }

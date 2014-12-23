@@ -92,16 +92,18 @@ public class WearAppListenerService extends WearableListenerService {
         Wearable.DataApi.putDataItem(googleApiClient, dataMapRequest.asPutDataRequest())
                 .setResultCallback(new ResultCallback<DataApi.DataItemResult>() {
                     @Override
-                    public void onResult(DataApi.DataItemResult dataItemResult) {
-                        if (!dataItemResult.getStatus().isSuccess()) {
-                            Log.e(TAG, "ERROR: failed to putDataItem, status code: " + dataItemResult.getStatus().getStatusCode());
+                    public void onResult(DataApi.DataItemResult result) {
+                        if (!result.getStatus().isSuccess()) {
+                            Log.e(TAG, "ERROR: failed to putDataItem, status code: " + result.getStatus().getStatusCode());
+                        } else {
+                            Log.d(TAG, "sent items successfully to wear app");
                         }
                     }
                 });
     }
 
     private List<Lecture> filterLectures(List<Lecture> lectures) {
-        List<Lecture> results = new ArrayList<>();
+        List<Lecture> results = new ArrayList<Lecture>();
         for (Lecture lecture : lectures) {
             // TODO implement something here
             results.add(lecture);
@@ -111,7 +113,9 @@ public class WearAppListenerService extends WearableListenerService {
     }
 
     private String[] buildArrayFromLectures(List<Lecture> lectures) {
-        List<String> results = new ArrayList<>();
+        String[] results = new String[lectures.size()];
+        int indexCounter = 0;
+
         for (Lecture lecture : lectures) {
             JSONObject lectureAsJson = new JSONObject();
             try {
@@ -123,12 +127,13 @@ public class WearAppListenerService extends WearableListenerService {
                 lectureAsJson.put("room", lecture.room);
                 lectureAsJson.put("room_index", lecture.room_index);
 
-                results.add(lectureAsJson.toString());
+                results[indexCounter] = lectureAsJson.toString();
+                ++indexCounter;
             } catch (JSONException e) {
                 Log.e(TAG, "failed building array from lectures (current: " + lecture.lecture_id + ")", e);
             }
         }
 
-        return (String[]) results.toArray();
+        return results;
     }
 }

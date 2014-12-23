@@ -57,18 +57,18 @@ public class SampleGridPagerAdapter extends FragmentGridPagerAdapter {
 
         mRows = new ArrayList<Row>();
 
-        mRows.add(new Row(cardFragment(R.string.welcome_title, R.string.welcome_text)));
-        mRows.add(new Row(cardFragment(R.string.about_title, R.string.about_text)));
-        mRows.add(new Row(
-                cardFragment(R.string.cards_title, R.string.cards_text),
-                cardFragment(R.string.expansion_title, R.string.expansion_text)));
-        mRows.add(new Row(
-                cardFragment(R.string.backgrounds_title, R.string.backgrounds_text),
-                cardFragment(R.string.columns_title, R.string.columns_text)));
-        mRows.add(new Row(new CustomFragment()));
-        mRows.add(new Row(cardFragment(R.string.dismiss_title, R.string.dismiss_text)));
-        mDefaultBg = new ColorDrawable(R.color.dark_grey);
-        mClearBg = new ColorDrawable(android.R.color.transparent);
+//        mRows.add(new Row(cardFragment(R.string.welcome_title, R.string.welcome_text)));
+//        mRows.add(new Row(cardFragment(R.string.about_title, R.string.about_text)));
+//        mRows.add(new Row(
+//                cardFragment(R.string.cards_title, R.string.cards_text),
+//                cardFragment(R.string.expansion_title, R.string.expansion_text)));
+//        mRows.add(new Row(
+//                cardFragment(R.string.backgrounds_title, R.string.backgrounds_text),
+//                cardFragment(R.string.columns_title, R.string.columns_text)));
+//        mRows.add(new Row(new CustomFragment()));
+//        mRows.add(new Row(cardFragment(R.string.dismiss_title, R.string.dismiss_text)));
+//        mDefaultBg = new ColorDrawable(R.color.dark_grey);
+//        mClearBg = new ColorDrawable(android.R.color.transparent);
     }
 
     LruCache<Integer, Drawable> mRowBackgrounds = new LruCache<Integer, Drawable>(3) {
@@ -96,7 +96,7 @@ public class SampleGridPagerAdapter extends FragmentGridPagerAdapter {
         protected Drawable create(final Point page) {
             // place bugdroid as the background at row 2, column 1
             if (page.y == 2 && page.x == 1) {
-                int resid = R.drawable.bugdroid_large;
+                int resid = 0;//R.drawable.bugdroid_large;
                 new DrawableLoadingTask(mContext) {
                     @Override
                     protected void onPostExecute(Drawable result) {
@@ -125,11 +125,11 @@ public class SampleGridPagerAdapter extends FragmentGridPagerAdapter {
     }
 
     static final int[] BG_IMAGES = new int[] {
-            R.drawable.debug_background_1,
-            R.drawable.debug_background_2,
-            R.drawable.debug_background_3,
-            R.drawable.debug_background_4,
-            R.drawable.debug_background_5
+//            R.drawable.debug_background_1,
+//            R.drawable.debug_background_2,
+//            R.drawable.debug_background_3,
+//            R.drawable.debug_background_4,
+//            R.drawable.debug_background_5
     };
 
     /** A convenient container for a row of fragments. */
