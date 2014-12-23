@@ -19,7 +19,7 @@ android {
     defaultConfig {
         versionCode 29
         versionName "1.29.5"
-        minSdkVersion 8
+        minSdkVersion 9
         targetSdkVersion 19
         project.ext.set("archivesBaseName", "Fahrplan");
     }
