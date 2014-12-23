@@ -23,7 +23,7 @@ public class WearHelper {
         List<Lecture> results = new ArrayList<Lecture>();
         for (Lecture lecture : lectures) {
             // has the lecture already ended?
-            if (now > lecture.dateUTC + lecture.startTime + lecture.duration) {
+            if (now > lecture.dateUTC + (lecture.duration * 60000)) {
                 continue;
             }
 
@@ -43,8 +43,8 @@ public class WearHelper {
                 lectureAsJson.put("title", lecture.title);
                 lectureAsJson.put("speakers", lecture.speakers);
                 lectureAsJson.put("highlight", lecture.highlight);
-                lectureAsJson.put("start_time", lecture.dateUTC + lecture.startTime); // TODO this is not the right value
-                lectureAsJson.put("end_time", lecture.dateUTC + lecture.startTime + lecture.duration);
+                lectureAsJson.put("start_time", lecture.dateUTC);
+                lectureAsJson.put("end_time", lecture.dateUTC + (lecture.duration * 60000));
                 lectureAsJson.put("room", lecture.room);
                 lectureAsJson.put("room_index", lecture.room_index);
 
@@ -68,8 +68,8 @@ public class WearHelper {
             lectureMap.putString("title", lecture.title);
             lectureMap.putString("speakers", lecture.speakers);
             lectureMap.putBoolean("highlight", lecture.highlight);
-            lectureMap.putLong("start_time", lecture.dateUTC + lecture.startTime); // TODO this is not the right value
-            lectureMap.putLong("end_time", lecture.dateUTC + lecture.startTime + lecture.duration);
+            lectureMap.putLong("start_time", lecture.dateUTC);
+            lectureMap.putLong("end_time", lecture.dateUTC + (lecture.duration * 60000));
             lectureMap.putString("room", lecture.room);
             lectureMap.putInt("room_index", lecture.room_index);
 
