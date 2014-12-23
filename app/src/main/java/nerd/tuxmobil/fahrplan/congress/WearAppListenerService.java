@@ -16,6 +16,9 @@
 
 package nerd.tuxmobil.fahrplan.congress;
 
+import android.content.Context;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -24,26 +27,24 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.wearable.DataApi;
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.PutDataMapRequest;
-import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 import com.google.android.gms.wearable.WearableListenerService;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class WearAppListenerService extends WearableListenerService {
 
     private static final String TAG = "CampFahrplan:WearAppListenerService";
 
-    public static final String PATH_REQUEST_LECTURE_DATA = "/request-lecture-data";
+    public static final String ACTION_REFRESH_LECTURE_DATA = "nerd.tuxmobil.fahrplan.congress.REFRESH_LECTURE_DATA";
+
+    public static final String PATH_REQUEST_NEW_LECTURE_DATA = "/request-new-lecture-data";
 
     public static final String PATH_LECTURE_DATA = "/lecture-data";
 
     public static final String KEY_LECTURE_DATA = "lectures";
+
+    public static final String KEY_SCHEDULE_VERSION = "schedule_version";
 
     private GoogleApiClient googleApiClient;
 
@@ -57,19 +58,56 @@ public class WearAppListenerService extends WearableListenerService {
         googleApiClient.connect();
     }
 
+    public static void requestRefreshLectureData(Context context) {
+        Log.d(TAG, "requestRefreshLectureData");
+
+        Intent intent = new Intent(context, WearAppListenerService.class);
+        intent.setAction(ACTION_REFRESH_LECTURE_DATA);
+
+        context.startService(intent);
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        int superResult = super.onStartCommand(intent, flags, startId);
+
+        if (intent != null && ACTION_REFRESH_LECTURE_DATA.equals(intent.getAction())) {
+            Log.i(TAG, "onStartCommand: REFRESH_LECTURE_DATA command received");
+
+            new AsyncTask<Void, Void, Void>() {
+
+                @Override
+                protected Void doInBackground(Void... params) {
+                    handleRequestLectureData();
+                    return null;
+                }
+
+                @Override
+                protected void onPostExecute(Void nothing) {
+                    super.onPostExecute(nothing);
+                    // TODO evaluate how this behaves if the service is simultaneously bound by Google Play Services
+                    stopSelf();
+                }
+            }.execute();
+        }
+
+        return superResult;
+    }
+
     @Override
     public void onMessageReceived(MessageEvent messageEvent) {
         Log.d(TAG, "onMessageReceived: " + messageEvent);
 
-        if (messageEvent.getPath().equals(PATH_REQUEST_LECTURE_DATA)) {
-            handleRequestLectureData(messageEvent.getSourceNodeId());
+        if (messageEvent.getPath().equals(PATH_REQUEST_NEW_LECTURE_DATA)) {
+            handleRequestLectureData();
         }
     }
 
-    private void handleRequestLectureData(String sourceNodeId) {
+    private void handleRequestLectureData() {
         if(!googleApiClient.isConnected()) {
             Log.e(TAG, "not connected to google api, connecting now (blocking)");
 
+            // if called by the Google APIs, this everything is executed in a separate thread; so this is okay
             ConnectionResult connectionResult = googleApiClient.blockingConnect(30, TimeUnit.SECONDS);
             if (!connectionResult.isSuccess()) {
                 Log.e(TAG, "connection to google api failed");
@@ -77,17 +115,10 @@ public class WearAppListenerService extends WearableListenerService {
             }
         }
 
-        List<Lecture> lectures = MyApp.lectureList;
-        if (lectures == null) {
-            Log.w(TAG, "no lectures found");
-            return;
-        }
-
-        // filter out lectures which are completed or too far in the future
-        List<Lecture> filteredLectures = filterLectures(lectures);
-
         PutDataMapRequest dataMapRequest = PutDataMapRequest.create(PATH_LECTURE_DATA);
-        dataMapRequest.getDataMap().putStringArray(KEY_LECTURE_DATA, buildArrayFromLectures(filteredLectures));
+        // attention: a update event will only be delivered to the wear app if something has really changed!
+        dataMapRequest.getDataMap().putStringArray(KEY_LECTURE_DATA, WearHelper.getLectures());
+        dataMapRequest.getDataMap().putString(KEY_SCHEDULE_VERSION, MyApp.version);
 
         Wearable.DataApi.putDataItem(googleApiClient, dataMapRequest.asPutDataRequest())
                 .setResultCallback(new ResultCallback<DataApi.DataItemResult>() {
@@ -100,40 +131,5 @@ public class WearAppListenerService extends WearableListenerService {
                         }
                     }
                 });
-    }
-
-    private List<Lecture> filterLectures(List<Lecture> lectures) {
-        List<Lecture> results = new ArrayList<Lecture>();
-        for (Lecture lecture : lectures) {
-            // TODO implement something here
-            results.add(lecture);
-        }
-
-        return results;
-    }
-
-    private String[] buildArrayFromLectures(List<Lecture> lectures) {
-        String[] results = new String[lectures.size()];
-        int indexCounter = 0;
-
-        for (Lecture lecture : lectures) {
-            JSONObject lectureAsJson = new JSONObject();
-            try {
-                lectureAsJson.put("title", lecture.title);
-                lectureAsJson.put("speakers", lecture.speakers);
-                lectureAsJson.put("highlight", lecture.highlight);
-                lectureAsJson.put("start_time", lecture.relStartTime);
-                lectureAsJson.put("end_time", lecture.relStartTime + lecture.duration);
-                lectureAsJson.put("room", lecture.room);
-                lectureAsJson.put("room_index", lecture.room_index);
-
-                results[indexCounter] = lectureAsJson.toString();
-                ++indexCounter;
-            } catch (JSONException e) {
-                Log.e(TAG, "failed building array from lectures (current: " + lecture.lecture_id + ")", e);
-            }
-        }
-
-        return results;
     }
 }

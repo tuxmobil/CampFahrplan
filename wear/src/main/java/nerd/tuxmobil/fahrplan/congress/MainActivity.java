@@ -107,6 +107,9 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
 
         Wearable.DataApi.addListener(googleApiClient, this);
 
+        // check if lecture data is available ... if not, get the data from the app
+//        Wearable.DataApi.getDataItem(googleApiClient, Constants.PATH_LECTURE_DATA);
+
         new AsyncTask<Void, Void, Void>() {
 
             @Override
@@ -115,7 +118,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
                 // send request for lecture data
                 for (Node node : result.getNodes()) {
                     LogUtil.debug("requesting lecture data from " + node.getDisplayName());
-                    Wearable.MessageApi.sendMessage(googleApiClient, node.getId(), Constants.PATH_REQUEST_LECTURE_DATA, new byte[] {});
+                    Wearable.MessageApi.sendMessage(googleApiClient, node.getId(), Constants.PATH_REQUEST_NEW_LECTURE_DATA, new byte[] {});
                 }
 
                 return null;
