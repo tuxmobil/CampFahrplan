@@ -13,8 +13,8 @@ public class LogUtil {
     }
 
     public static void info(String message) {
-//        if (Log.isLoggable(TAG, Log.INFO)) {
+        if (Log.isLoggable(TAG, Log.INFO)) {
             Log.i(TAG, message);
-//        }
+        }
     }
 }

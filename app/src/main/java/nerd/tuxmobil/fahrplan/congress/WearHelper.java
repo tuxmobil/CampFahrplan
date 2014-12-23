@@ -20,7 +20,7 @@ public class WearHelper {
     public static List<Lecture> filterLectures(List<Lecture> lectures) {
         long now = Calendar.getInstance().getTimeInMillis();
 
-        List<Lecture> results = new ArrayList<Lecture>();
+        List<Lecture> results = new ArrayList<Lecture>(lectures.size());
         for (Lecture lecture : lectures) {
             // has the lecture already ended?
             if (now > lecture.dateUTC + (lecture.duration * 60000)) {
@@ -41,6 +41,7 @@ public class WearHelper {
 
             lectureMap.putString("title", lecture.title);
             lectureMap.putString("speakers", lecture.speakers);
+            lectureMap.putString("room", lecture.room);
             lectureMap.putBoolean("highlight", lecture.highlight);
             lectureMap.putLong("start_time", lecture.dateUTC);
             lectureMap.putLong("end_time", lecture.dateUTC + (lecture.duration * 60000));
