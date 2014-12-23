@@ -26,6 +26,7 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.wearable.DataApi;
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.PutDataMapRequest;
+import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 import com.google.android.gms.wearable.WearableListenerService;
 
@@ -119,6 +120,8 @@ public class WearAppListenerService extends WearableListenerService {
         // attention: a update event will only be delivered to the wear app if something has really changed!
         dataMapRequest.getDataMap().putStringArray(KEY_LECTURE_DATA, lectures);
         dataMapRequest.getDataMap().putString(KEY_SCHEDULE_VERSION, MyApp.version);
+        // TODO use for lectures for more efficient transmission
+//        dataMapRequest.getDataMap().putDataMapArrayList();
 
         Wearable.DataApi.putDataItem(googleApiClient, dataMapRequest.asPutDataRequest())
                 .setResultCallback(new ResultCallback<DataApi.DataItemResult>() {

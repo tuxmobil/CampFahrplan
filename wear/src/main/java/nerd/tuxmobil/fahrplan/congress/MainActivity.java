@@ -4,10 +4,12 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.wearable.view.DotsPageIndicator;
 import android.support.wearable.view.GridViewPager;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowInsets;
 import android.widget.Toast;
@@ -22,6 +24,7 @@ import com.google.android.gms.wearable.DataMap;
 import com.google.android.gms.wearable.DataMapItem;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
+import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 
 import java.util.List;
@@ -108,20 +111,62 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         Wearable.DataApi.addListener(googleApiClient, this);
 
         // check if lecture data is available ... if not, get the data from the app
-//        Wearable.DataApi.getDataItem(googleApiClient, Constants.PATH_LECTURE_DATA);
 
-        new AsyncTask<Void, Void, Void>() {
+
+        new AsyncTask<Void, Void, String[]>() {
 
             @Override
-            protected Void doInBackground(Void... params) {
-                NodeApi.GetConnectedNodesResult result = Wearable.NodeApi.getConnectedNodes(googleApiClient).await();
-                // send request for lecture data
-                for (Node node : result.getNodes()) {
-                    LogUtil.debug("requesting lecture data from " + node.getDisplayName());
-                    Wearable.MessageApi.sendMessage(googleApiClient, node.getId(), Constants.PATH_REQUEST_NEW_LECTURE_DATA, new byte[] {});
+            protected String[] doInBackground(Void... params) {
+                try {
+                    // try to get the current data first
+                    // see: http://stackoverflow.com/questions/24601251/what-is-the-uri-for-wearable-dataapi-getdataitem-after-using-putdatamaprequest
+                    DataApi.DataItemResult result = Wearable.DataApi.getDataItem(googleApiClient, getUriForDataItem()).await();
+                    if (!result.getStatus().isSuccess()) {
+                        throw new Exception("result status is not success");
+                    }
+
+                    final DataMap map = DataMapItem.fromDataItem(result.getDataItem()).getDataMap();
+                    if (map == null) {
+                        throw new Exception("map is null");
+                    }
+
+                    String[] lectures = map.getStringArray(Constants.KEY_LECTURE_DATA);
+                    if (lectures == null) {
+                        throw new Exception("no lectures in store");
+                    }
+
+                    return lectures;
+                } catch (Exception e) {
+                    NodeApi.GetConnectedNodesResult foundNodes = Wearable.NodeApi.getConnectedNodes(googleApiClient).await();
+                    // send request for lecture data
+                    for (Node node : foundNodes.getNodes()) {
+                        LogUtil.debug("requesting lecture data from " + node.getDisplayName());
+                        Wearable.MessageApi.sendMessage(googleApiClient, node.getId(), Constants.PATH_REQUEST_NEW_LECTURE_DATA, new byte[] {});
+                    }
                 }
 
                 return null;
+            }
+
+            @Override
+            protected void onPostExecute(String[] lectures) {
+                super.onPostExecute(lectures);
+
+                if (lectures == null) {
+                    return;
+                }
+
+                LogUtil.debug("taking pre-stored lectures");
+                fillPagerWithData(lectures);
+            }
+
+            private Uri getUriForDataItem() {
+                return new Uri.Builder().scheme(PutDataRequest.WEAR_URI_SCHEME).authority(getLocalNodeId()).path(Constants.PATH_LECTURE_DATA).build();
+            }
+
+            private String getLocalNodeId() {
+                NodeApi.GetLocalNodeResult nodeResult = Wearable.NodeApi.getLocalNode(googleApiClient).await();
+                return nodeResult.getNode().getId();
             }
 
         }.execute();
@@ -147,11 +192,9 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         final List<DataEvent> events = FreezableUtils.freezeIterable(dataEvents);
         dataEvents.close();
 
-        LogUtil.debug("onDataChanged: received data = " + events);
-
         for (DataEvent event : events) {
             if (event.getDataItem().getUri().getPath().equals(Constants.PATH_LECTURE_DATA)) {
-                final DataMap map = DataMapItem.fromDataItem(event.getDataItem()).getDataMap();
+                DataMap map = DataMapItem.fromDataItem(event.getDataItem()).getDataMap();
                 fillPagerWithData(map.getStringArray(Constants.KEY_LECTURE_DATA));
             }
         }
