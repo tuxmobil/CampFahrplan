@@ -8,35 +8,30 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class WearHelper {
 
     private static final String TAG = "CampFahrplan:WearHelper";
 
-    public static String[] getLectures() {
-        List<Lecture> lectures = MyApp.lectureList;
-        if (lectures == null) {
-            Log.w(TAG, "no lectures found");
-            return null;
-        }
+    public static List<Lecture> filterLectures(List<Lecture> lectures) {
+        long now = Calendar.getInstance().getTimeInMillis();
 
-        // filter out lectures which are completed
-        // nevertheless, the wear app still has to do filtering then (but just on a reduced dataset)
-        return buildArrayFromLectures(filterLectures(lectures));
-    }
-
-    private static List<Lecture> filterLectures(List<Lecture> lectures) {
         List<Lecture> results = new ArrayList<Lecture>();
         for (Lecture lecture : lectures) {
-            // TODO implement something here
+            // has the lecture already ended?
+            if (now > lecture.dateUTC + lecture.startTime + lecture.duration) {
+                continue;
+            }
+
             results.add(lecture);
         }
 
         return results;
     }
 
-    private static String[] buildArrayFromLectures(List<Lecture> lectures) {
+    public static String[] buildArrayFromLectures(List<Lecture> lectures) {
         String[] results = new String[lectures.size()];
         int indexCounter = 0;
 
@@ -46,8 +41,8 @@ public class WearHelper {
                 lectureAsJson.put("title", lecture.title);
                 lectureAsJson.put("speakers", lecture.speakers);
                 lectureAsJson.put("highlight", lecture.highlight);
-                lectureAsJson.put("start_time", lecture.relStartTime);
-                lectureAsJson.put("end_time", lecture.relStartTime + lecture.duration);
+                lectureAsJson.put("start_time", lecture.dateUTC + lecture.startTime); // TODO this is not the right value
+                lectureAsJson.put("end_time", lecture.dateUTC + lecture.startTime + lecture.duration);
                 lectureAsJson.put("room", lecture.room);
                 lectureAsJson.put("room_index", lecture.room_index);
 

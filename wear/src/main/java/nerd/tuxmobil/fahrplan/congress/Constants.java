@@ -8,4 +8,6 @@ public class Constants {
 
     public static final String KEY_LECTURE_DATA = "lectures";
 
+    public static final String KEY_SCHEDULE_VERSION = "schedule_version";
+
 }
