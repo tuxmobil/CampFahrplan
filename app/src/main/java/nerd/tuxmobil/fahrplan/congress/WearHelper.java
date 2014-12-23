@@ -33,34 +33,8 @@ public class WearHelper {
         return results;
     }
 
-    public static String[] buildArrayFromLectures(List<Lecture> lectures) {
-        String[] results = new String[lectures.size()];
-        int indexCounter = 0;
-
-        for (Lecture lecture : lectures) {
-            JSONObject lectureAsJson = new JSONObject();
-            try {
-                lectureAsJson.put("title", lecture.title);
-                lectureAsJson.put("speakers", lecture.speakers);
-                lectureAsJson.put("highlight", lecture.highlight);
-                lectureAsJson.put("start_time", lecture.dateUTC);
-                lectureAsJson.put("end_time", lecture.dateUTC + (lecture.duration * 60000));
-                lectureAsJson.put("room", lecture.room);
-                lectureAsJson.put("room_index", lecture.room_index);
-
-                results[indexCounter] = lectureAsJson.toString();
-                ++indexCounter;
-            } catch (JSONException e) {
-                Log.e(TAG, "failed building array from lectures (current: " + lecture.lecture_id
-                        + ")", e);
-            }
-        }
-
-        return results;
-    }
-
-    public static List<DataMap> buildDataMapListFromLectures(List<Lecture> lectures) {
-        List<DataMap> result = new ArrayList<DataMap>(lectures.size());
+    public static ArrayList<DataMap> buildDataMapListFromLectures(List<Lecture> lectures) {
+        ArrayList<DataMap> result = new ArrayList<DataMap>(lectures.size());
 
         for (Lecture lecture : lectures) {
             DataMap lectureMap = new DataMap();
@@ -70,8 +44,7 @@ public class WearHelper {
             lectureMap.putBoolean("highlight", lecture.highlight);
             lectureMap.putLong("start_time", lecture.dateUTC);
             lectureMap.putLong("end_time", lecture.dateUTC + (lecture.duration * 60000));
-            lectureMap.putString("room", lecture.room);
-            lectureMap.putInt("room_index", lecture.room_index);
+            lectureMap.putInt("track_color", LectureColorHelper.getBackgroundColor(lecture.track));
 
             result.add(lectureMap);
         }

@@ -27,6 +27,7 @@ import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends Activity implements GoogleApiClient.ConnectionCallbacks,
@@ -113,10 +114,10 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         // check if lecture data is available ... if not, get the data from the app
 
 
-        new AsyncTask<Void, Void, String[]>() {
+        new AsyncTask<Void, Void, ArrayList<DataMap>>() {
 
             @Override
-            protected String[] doInBackground(Void... params) {
+            protected ArrayList<DataMap> doInBackground(Void... params) {
                 try {
                     // try to get the current data first
                     // see: http://stackoverflow.com/questions/24601251/what-is-the-uri-for-wearable-dataapi-getdataitem-after-using-putdatamaprequest
@@ -130,7 +131,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
                         throw new Exception("map is null");
                     }
 
-                    String[] lectures = map.getStringArray(Constants.KEY_LECTURE_DATA);
+                    ArrayList<DataMap> lectures = map.getDataMapArrayList(Constants.KEY_LECTURE_DATA);
                     if (lectures == null) {
                         throw new Exception("no lectures in store");
                     }
@@ -149,7 +150,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
             }
 
             @Override
-            protected void onPostExecute(String[] lectures) {
+            protected void onPostExecute(ArrayList<DataMap> lectures) {
                 super.onPostExecute(lectures);
 
                 if (lectures == null) {
@@ -195,12 +196,12 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         for (DataEvent event : events) {
             if (event.getDataItem().getUri().getPath().equals(Constants.PATH_LECTURE_DATA)) {
                 DataMap map = DataMapItem.fromDataItem(event.getDataItem()).getDataMap();
-                fillPagerWithData(map.getStringArray(Constants.KEY_LECTURE_DATA));
+                fillPagerWithData(map.getDataMapArrayList(Constants.KEY_LECTURE_DATA));
             }
         }
     }
 
-    private void fillPagerWithData(String[] lectures) {
+    private void fillPagerWithData(ArrayList<DataMap> lectures) {
         pager.setAdapter(new SampleGridPagerAdapter(this, getFragmentManager()));
         dotsPageIndicator.setPager(pager);
 

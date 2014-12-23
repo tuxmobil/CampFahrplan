@@ -24,12 +24,15 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.wearable.DataApi;
+import com.google.android.gms.wearable.DataMap;
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 import com.google.android.gms.wearable.WearableListenerService;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class WearAppListenerService extends WearableListenerService {
@@ -82,7 +85,7 @@ public class WearAppListenerService extends WearableListenerService {
                 @Override
                 public void run() {
                     Log.d(TAG, "run in background for handleSendLectureData");
-                    handleSendLectureData(WearHelper.buildArrayFromLectures(WearHelper.filterLectures(lectures)));
+                    handleSendLectureData(WearHelper.buildDataMapListFromLectures(WearHelper.filterLectures(lectures)));
                     lectures = null;
 
                     Log.d(TAG, "stopping service again");
@@ -100,11 +103,11 @@ public class WearAppListenerService extends WearableListenerService {
         Log.d(TAG, "onMessageReceived: " + messageEvent);
 
         if (messageEvent.getPath().equals(PATH_REQUEST_NEW_LECTURE_DATA)) {
-            handleSendLectureData(WearHelper.buildArrayFromLectures(WearHelper.filterLectures(FahrplanMisc.loadLecturesForAllDays(this))));
+            handleSendLectureData(WearHelper.buildDataMapListFromLectures(WearHelper.filterLectures(FahrplanMisc.loadLecturesForAllDays(this))));
         }
     }
 
-    private void handleSendLectureData(String[] lectures) {
+    private void handleSendLectureData(ArrayList<DataMap> lectures) {
         if(!googleApiClient.isConnected()) {
             Log.e(TAG, "not connected to google api, connecting now (blocking)");
 
@@ -118,10 +121,9 @@ public class WearAppListenerService extends WearableListenerService {
 
         PutDataMapRequest dataMapRequest = PutDataMapRequest.create(PATH_LECTURE_DATA);
         // attention: a update event will only be delivered to the wear app if something has really changed!
-        dataMapRequest.getDataMap().putStringArray(KEY_LECTURE_DATA, lectures);
+        dataMapRequest.getDataMap().putDataMapArrayList(KEY_LECTURE_DATA, lectures);
         dataMapRequest.getDataMap().putString(KEY_SCHEDULE_VERSION, MyApp.version);
         // TODO use for lectures for more efficient transmission
-//        dataMapRequest.getDataMap().putDataMapArrayList();
 
         Wearable.DataApi.putDataItem(googleApiClient, dataMapRequest.asPutDataRequest())
                 .setResultCallback(new ResultCallback<DataApi.DataItemResult>() {
