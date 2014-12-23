@@ -220,7 +220,8 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
             protected void onPostExecute(ProcessorResult processorResult) {
                 super.onPostExecute(processorResult);
 
-                pager.setAdapter(new LectureGridPagingAdapter(MainActivity.this, MainActivity.this.getFragmentManager()));
+                pager.setAdapter(new LectureGridPagingAdapter(MainActivity.this, MainActivity.this.getFragmentManager(),
+                        processorResult.now, processorResult.nextHighlights, processorResult.nextAllRooms));
                 dotsPageIndicator.setPager(pager);
 
                 progressDialog.setOnDismissListener(null);
