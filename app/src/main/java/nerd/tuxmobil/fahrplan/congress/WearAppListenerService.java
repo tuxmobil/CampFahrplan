@@ -187,9 +187,9 @@ public class WearAppListenerService extends WearableListenerService {
             return;
         }
 
-        Log.e(TAG, "handleUpdateSingleLectureData: dataMap currently contains: " + dataMap.keySet());
+        Log.d(TAG, "handleUpdateSingleLectureData: dataMap currently contains: " + dataMap.keySet());
 
-        dataMap.putDataMap(KEY_LECTURE_DATA + lecture.getInt("id"), lecture);
+        dataMap.putDataMap(KEY_LECTURE_DATA + lecture.getString("id"), lecture);
         PutDataMapRequest dataMapRequest = PutDataMapRequest.create(PATH_LECTURE_DATA);
 
         dataMapRequest.getDataMap().putAll(dataMap);
