@@ -1,6 +1,7 @@
 package nerd.tuxmobil.fahrplan.congress;
 
 import android.app.Application;
+import android.content.Context;
 import android.util.Log;
 import android.util.SparseIntArray;
 
