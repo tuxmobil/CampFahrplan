@@ -63,36 +63,4 @@ public class DataProcessorTask extends AsyncTask<ArrayList<DataMap>, Void, DataP
             this.nextAllRooms = nextAllRooms;
         }
     }
-
-    public static class Lecture {
-
-        public String title;
-
-        public String speakers;
-
-        public String room;
-
-        public boolean highlight;
-
-        public long startTime;
-
-        public long endTime;
-
-        public int trackColor;
-
-        public static Lecture createFromDataMap(DataMap map) {
-            Lecture lecture = new Lecture();
-
-            lecture.title = map.getString("title");
-            lecture.speakers = map.getString("speakers");
-            lecture.room = map.getString("room");
-            lecture.highlight = map.getBoolean("highlight");
-            lecture.startTime = map.getLong("start_time");
-            lecture.endTime = map.getLong("end_time");
-            lecture.trackColor = map.getInt("track_color");
-
-            return lecture;
-        }
-
-    }
 }
