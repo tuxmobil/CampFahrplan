@@ -462,10 +462,7 @@ class parser extends AsyncTask<String, Void, Boolean> {
             if (isCancelled()) {
                 return false;
             }
-            WearAppListenerService.requestRefreshLectureData(context);
-            if (isCancelled()) {
-                return false;
-            }
+            WearAppListenerService.requestRefreshLectureData(context, lectures);
             meta.eTag = eTag;
             storeMeta(context, meta);
             return true;

@@ -18,7 +18,6 @@ package nerd.tuxmobil.fahrplan.congress;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -46,6 +45,8 @@ public class WearAppListenerService extends WearableListenerService {
 
     public static final String KEY_SCHEDULE_VERSION = "schedule_version";
 
+    private static LectureList lectures = null;
+
     private GoogleApiClient googleApiClient;
 
     @Override
@@ -58,8 +59,9 @@ public class WearAppListenerService extends WearableListenerService {
         googleApiClient.connect();
     }
 
-    public static void requestRefreshLectureData(Context context) {
+    public static void requestRefreshLectureData(Context context, LectureList lectureList) {
         Log.d(TAG, "requestRefreshLectureData");
+        lectures = lectureList;
 
         Intent intent = new Intent(context, WearAppListenerService.class);
         intent.setAction(ACTION_REFRESH_LECTURE_DATA);
@@ -74,21 +76,19 @@ public class WearAppListenerService extends WearableListenerService {
         if (intent != null && ACTION_REFRESH_LECTURE_DATA.equals(intent.getAction())) {
             Log.i(TAG, "onStartCommand: REFRESH_LECTURE_DATA command received");
 
-            new AsyncTask<Void, Void, Void>() {
-
+            // according to javadoc of onStartCommand, long operations should be started within e.g. a thread
+            new Thread(new Runnable() {
                 @Override
-                protected Void doInBackground(Void... params) {
-                    handleRequestLectureData();
-                    return null;
-                }
+                public void run() {
+                    Log.d(TAG, "run in background for handleSendLectureData");
+                    handleSendLectureData(WearHelper.buildArrayFromLectures(WearHelper.filterLectures(lectures)));
+                    lectures = null;
 
-                @Override
-                protected void onPostExecute(Void nothing) {
-                    super.onPostExecute(nothing);
-                    // TODO evaluate how this behaves if the service is simultaneously bound by Google Play Services
+                    Log.d(TAG, "stopping service again");
+                    // TODO look how this behaves if the service is simultaneously bound by Google Play Services
                     stopSelf();
                 }
-            }.execute();
+            }).start();
         }
 
         return superResult;
@@ -99,16 +99,16 @@ public class WearAppListenerService extends WearableListenerService {
         Log.d(TAG, "onMessageReceived: " + messageEvent);
 
         if (messageEvent.getPath().equals(PATH_REQUEST_NEW_LECTURE_DATA)) {
-            handleRequestLectureData();
+            handleSendLectureData(WearHelper.buildArrayFromLectures(WearHelper.filterLectures(FahrplanMisc.loadLecturesForAllDays(this))));
         }
     }
 
-    private void handleRequestLectureData() {
+    private void handleSendLectureData(String[] lectures) {
         if(!googleApiClient.isConnected()) {
             Log.e(TAG, "not connected to google api, connecting now (blocking)");
 
             // if called by the Google APIs, this everything is executed in a separate thread; so this is okay
-            ConnectionResult connectionResult = googleApiClient.blockingConnect(30, TimeUnit.SECONDS);
+            ConnectionResult connectionResult = googleApiClient.blockingConnect(1, TimeUnit.SECONDS);
             if (!connectionResult.isSuccess()) {
                 Log.e(TAG, "connection to google api failed");
                 return;
@@ -117,7 +117,7 @@ public class WearAppListenerService extends WearableListenerService {
 
         PutDataMapRequest dataMapRequest = PutDataMapRequest.create(PATH_LECTURE_DATA);
         // attention: a update event will only be delivered to the wear app if something has really changed!
-        dataMapRequest.getDataMap().putStringArray(KEY_LECTURE_DATA, WearHelper.getLectures());
+        dataMapRequest.getDataMap().putStringArray(KEY_LECTURE_DATA, lectures);
         dataMapRequest.getDataMap().putString(KEY_SCHEDULE_VERSION, MyApp.version);
 
         Wearable.DataApi.putDataItem(googleApiClient, dataMapRequest.asPutDataRequest())
