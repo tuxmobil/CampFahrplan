@@ -9,7 +9,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.wearable.view.DotsPageIndicator;
 import android.support.wearable.view.GridViewPager;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowInsets;
 import android.widget.Toast;
@@ -20,6 +19,7 @@ import com.google.android.gms.common.data.FreezableUtils;
 import com.google.android.gms.wearable.DataApi;
 import com.google.android.gms.wearable.DataEvent;
 import com.google.android.gms.wearable.DataEventBuffer;
+import com.google.android.gms.wearable.DataItemBuffer;
 import com.google.android.gms.wearable.DataMap;
 import com.google.android.gms.wearable.DataMapItem;
 import com.google.android.gms.wearable.Node;
@@ -38,6 +38,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
     private GoogleApiClient googleApiClient;
     private DotsPageIndicator dotsPageIndicator;
     private GridViewPager pager;
+    private DataProcessorTask dataProcessorTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +98,10 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
     protected void onStop() {
         super.onStop();
 
+        if (dataProcessorTask != null && !dataProcessorTask.isCancelled()) {
+            dataProcessorTask.cancel(true);
+        }
+
         if (googleApiClient.isConnected()) {
             LogUtil.debug("onStop: disconnecting google apis");
 
@@ -112,37 +117,50 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         Wearable.DataApi.addListener(googleApiClient, this);
 
         // check if lecture data is available ... if not, get the data from the app
-
-
         new AsyncTask<Void, Void, ArrayList<DataMap>>() {
 
             @Override
             protected ArrayList<DataMap> doInBackground(Void... params) {
+                NodeApi.GetConnectedNodesResult foundNodes = Wearable.NodeApi.getConnectedNodes(googleApiClient).await();
+
+                DataItemBuffer resultBuffer = null;
                 try {
                     // try to get the current data first
                     // see: http://stackoverflow.com/questions/24601251/what-is-the-uri-for-wearable-dataapi-getdataitem-after-using-putdatamaprequest
-                    DataApi.DataItemResult result = Wearable.DataApi.getDataItem(googleApiClient, getUriForDataItem()).await();
-                    if (!result.getStatus().isSuccess()) {
-                        throw new Exception("result status is not success");
+
+                    // iterate over other nodes ... as there is only one handheld that sent the original data,
+                    // we should only find one matching URI after all
+                    DataMap dataMap = null;
+                    for (Node foundNode : foundNodes.getNodes()) {
+                        DataApi.DataItemResult result = Wearable.DataApi.getDataItem(googleApiClient,
+                                getUriForLectureData(foundNode.getId())).await();
+                        if (result.getStatus().isSuccess()) {
+                            dataMap = DataMapItem.fromDataItem(result.getDataItem()).getDataMap();
+                            break;
+                        }
                     }
 
-                    final DataMap map = DataMapItem.fromDataItem(result.getDataItem()).getDataMap();
-                    if (map == null) {
-                        throw new Exception("map is null");
+                    if (dataMap == null) {
+                        throw new Exception("dataMap is null");
                     }
 
-                    ArrayList<DataMap> lectures = map.getDataMapArrayList(Constants.KEY_LECTURE_DATA);
+                    ArrayList<DataMap> lectures = dataMap.getDataMapArrayList(Constants.KEY_LECTURE_DATA);
                     if (lectures == null) {
                         throw new Exception("no lectures in store");
                     }
 
                     return lectures;
                 } catch (Exception e) {
-                    NodeApi.GetConnectedNodesResult foundNodes = Wearable.NodeApi.getConnectedNodes(googleApiClient).await();
+                    LogUtil.debug("failed to retrieve lecture data, reason: " + e.getMessage());
+
                     // send request for lecture data
                     for (Node node : foundNodes.getNodes()) {
                         LogUtil.debug("requesting lecture data from " + node.getDisplayName());
                         Wearable.MessageApi.sendMessage(googleApiClient, node.getId(), Constants.PATH_REQUEST_NEW_LECTURE_DATA, new byte[] {});
+                    }
+                } finally {
+                    if (resultBuffer != null) {
+                        resultBuffer.close();
                     }
                 }
 
@@ -158,16 +176,11 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
                 }
 
                 LogUtil.debug("taking pre-stored lectures");
-                fillPagerWithData(lectures);
+                processData(lectures);
             }
 
-            private Uri getUriForDataItem() {
-                return new Uri.Builder().scheme(PutDataRequest.WEAR_URI_SCHEME).authority(getLocalNodeId()).path(Constants.PATH_LECTURE_DATA).build();
-            }
-
-            private String getLocalNodeId() {
-                NodeApi.GetLocalNodeResult nodeResult = Wearable.NodeApi.getLocalNode(googleApiClient).await();
-                return nodeResult.getNode().getId();
+            private Uri getUriForLectureData(String nodeId) {
+                return new Uri.Builder().scheme(PutDataRequest.WEAR_URI_SCHEME).authority(nodeId).path(Constants.PATH_LECTURE_DATA).build();
             }
 
         }.execute();
@@ -196,15 +209,25 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         for (DataEvent event : events) {
             if (event.getDataItem().getUri().getPath().equals(Constants.PATH_LECTURE_DATA)) {
                 DataMap map = DataMapItem.fromDataItem(event.getDataItem()).getDataMap();
-                fillPagerWithData(map.getDataMapArrayList(Constants.KEY_LECTURE_DATA));
+                processData(map.getDataMapArrayList(Constants.KEY_LECTURE_DATA));
             }
         }
     }
 
-    private void fillPagerWithData(ArrayList<DataMap> lectures) {
-        pager.setAdapter(new SampleGridPagerAdapter(this, getFragmentManager()));
-        dotsPageIndicator.setPager(pager);
+    private void processData(ArrayList<DataMap> lectures) {
+        dataProcessorTask = new DataProcessorTask() {
+            @Override
+            protected void onPostExecute(ProcessorResult processorResult) {
+                super.onPostExecute(processorResult);
 
-        progressDialog.cancel();
+                pager.setAdapter(new LectureGridPagingAdapter(MainActivity.this, MainActivity.this.getFragmentManager()));
+                dotsPageIndicator.setPager(pager);
+
+                progressDialog.setOnDismissListener(null);
+                progressDialog.cancel();
+            }
+        };
+
+        dataProcessorTask.execute(lectures);
     }
 }
