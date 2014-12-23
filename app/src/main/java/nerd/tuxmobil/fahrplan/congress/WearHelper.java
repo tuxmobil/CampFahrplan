@@ -1,13 +1,6 @@
 package nerd.tuxmobil.fahrplan.congress;
 
-import android.content.Context;
-import android.os.AsyncTask;
-import android.util.Log;
-
 import com.google.android.gms.wearable.DataMap;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -37,20 +30,25 @@ public class WearHelper {
         ArrayList<DataMap> result = new ArrayList<DataMap>(lectures.size());
 
         for (Lecture lecture : lectures) {
-            DataMap lectureMap = new DataMap();
-
-            lectureMap.putString("title", lecture.title);
-            lectureMap.putString("speakers", lecture.speakers);
-            lectureMap.putString("room", lecture.room);
-            lectureMap.putBoolean("highlight", lecture.highlight);
-            lectureMap.putLong("start_time", lecture.dateUTC);
-            lectureMap.putLong("end_time", lecture.dateUTC + (lecture.duration * 60000));
-            lectureMap.putInt("track_color", LectureColorHelper.getBackgroundColor(lecture.track));
-
-            result.add(lectureMap);
+            result.add(buildDataMapFromLecture(lecture));
         }
 
         return result;
+    }
+
+    public static DataMap buildDataMapFromLecture(Lecture lecture) {
+        DataMap lectureMap = new DataMap();
+
+        lectureMap.putString("id", lecture.lecture_id);
+        lectureMap.putString("title", lecture.title);
+        lectureMap.putString("speakers", lecture.speakers);
+        lectureMap.putString("room", lecture.room);
+        lectureMap.putBoolean("highlight", lecture.highlight);
+        lectureMap.putLong("start_time", lecture.dateUTC);
+        lectureMap.putLong("end_time", lecture.dateUTC + (lecture.duration * 60000));
+        lectureMap.putInt("track_color", LectureColorHelper.getBackgroundColor(lecture.track));
+
+        return lectureMap;
     }
 
 }
