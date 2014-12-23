@@ -23,6 +23,7 @@ import android.content.res.Resources;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.TransitionDrawable;
 import android.support.v4.util.LruCache;
 import android.support.wearable.view.CardFragment;
 import android.support.wearable.view.FragmentGridPagerAdapter;
@@ -49,14 +50,38 @@ public class LectureGridPagingAdapter extends FragmentGridPagerAdapter {
 
     private ColorDrawable defaultBackground;
 
+    private ColorDrawable clearBackground;
+
+    private LruCache<Point, Drawable> pageBackgrounds = new LruCache<Point, Drawable>(15) {
+        @Override
+        protected Drawable create(final Point page) {
+            Fragment fragment = rows.get(page.y).getColumn(page.x);
+            if (fragment instanceof LectureCardFragment) {
+                TransitionDrawable background = new TransitionDrawable(new Drawable[] {
+                        clearBackground,
+                        new ColorDrawable(((LectureCardFragment) fragment).getLectureTrackColor())
+                });
+
+                pageBackgrounds.put(page, background);
+                notifyPageBackgroundChanged(page.y, page.x);
+                background.startTransition(TRANSITION_DURATION_MILLIS);
+            }
+
+            return GridPagerAdapter.BACKGROUND_NONE;
+        }
+    };
+
     public LectureGridPagingAdapter(Context context, FragmentManager fm, List<Lecture> now,
                                     List<Lecture> nextHighlights, List<Lecture> nextAllRooms) {
         super(fm);
         this.context = context;
-
         rows = new ArrayList<Row>();
+        defaultBackground = new ColorDrawable(R.color.dark_grey);
+        clearBackground = new ColorDrawable(android.R.color.transparent);
 
-        rows.add(new Row(cardFragment(R.string.app_name, R.string.app_name)));
+        initAdapter(now, nextHighlights, nextAllRooms);
+
+
 //        rows.add(new Row(cardFragment(R.string.about_title, R.string.about_text)));
 //        rows.add(new Row(
 //                cardFragment(R.string.cards_title, R.string.cards_text),
@@ -65,29 +90,38 @@ public class LectureGridPagingAdapter extends FragmentGridPagerAdapter {
 //                cardFragment(R.string.backgrounds_title, R.string.backgrounds_text),
 //                cardFragment(R.string.columns_title, R.string.columns_text)));
 //        rows.add(new Row(cardFragment(R.string.dismiss_title, R.string.dismiss_text)));
-        defaultBackground = new ColorDrawable(R.color.dark_grey);
+
     }
 
-    LruCache<Integer, Drawable> mRowBackgrounds = new LruCache<Integer, Drawable>(3) {
-        @Override
-        protected Drawable create(final Integer row) {
+    private void initAdapter(List<Lecture> now, List<Lecture> nextHighlights, List<Lecture> nextAllRooms) {
+        if (now.size() == 0) {
+            rows.add(new Row(cardFragment(R.string.card_no_running_lectures_title, R.string.card_no_running_lectures_description)));
+        } else {
 
-//                    TransitionDrawable background = new TransitionDrawable(new Drawable[] {
-//                            defaultBackground,
-//                            new ColorDrawable()
-//                    });
-//                    mRowBackgrounds.put(row, background);
-//                    notifyRowBackgroundChanged(row);
-//                    background.startTransition(TRANSITION_DURATION_MILLIS);
-
-            return defaultBackground;
         }
-    };
 
-    private Fragment cardFragment(int titleRes, int textRes) {
+        if (nextHighlights.size() > 0) {
+
+        }
+
+        if (nextAllRooms.size() == 0) {
+            rows.add(new Row(cardFragment(R.string.card_no_next_lectures_title, R.string.card_no_next_lectures_description)));
+        }
+    }
+
+    private CardFragment cardFragment(int titleRes, int textRes) {
         Resources res = context.getResources();
         CardFragment fragment = CardFragment.create(res.getText(titleRes), res.getText(textRes));
         fragment.setCardMarginBottom(res.getDimensionPixelSize(R.dimen.card_margin_bottom));
+
+        return fragment;
+    }
+
+    private LectureCardFragment lectureFragment(Lecture lecture) {
+        Resources res = context.getResources();
+        LectureCardFragment fragment = LectureCardFragment.create(lecture);
+        fragment.setCardMarginBottom(res.getDimensionPixelSize(R.dimen.card_margin_bottom));
+
         return fragment;
     }
 
@@ -122,13 +156,12 @@ public class LectureGridPagingAdapter extends FragmentGridPagerAdapter {
 
     @Override
     public Drawable getBackgroundForRow(final int row) {
-        return mRowBackgrounds.get(row);
+        return defaultBackground;
     }
 
     @Override
     public Drawable getBackgroundForPage(final int row, final int column) {
-        return GridPagerAdapter.BACKGROUND_NONE;
-//        return mPageBackgrounds.get(new Point(column, row));
+        return pageBackgrounds.get(new Point(column, row));
     }
 
     @Override

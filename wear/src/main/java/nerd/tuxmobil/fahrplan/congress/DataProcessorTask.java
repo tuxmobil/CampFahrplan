@@ -10,11 +10,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DataProcessorTask extends AsyncTask<ArrayList<DataMap>, Void, DataProcessorTask.ProcessorResult> {
+public class DataProcessorTask extends AsyncTask<List<DataMap>, Void, DataProcessorTask.ProcessorResult> {
 
     @Override
-    protected ProcessorResult doInBackground(ArrayList<DataMap>... lists) {
-        ArrayList<DataMap> lectures = lists[0];
+    protected ProcessorResult doInBackground(List<DataMap>... lists) {
+        List<DataMap> lectures = lists[0];
         List<Lecture> runningLectures = new ArrayList<Lecture>();
         List<Lecture> nextHighlightLectures = new ArrayList<Lecture>();
         Map<String, Lecture> nextRoomLectures = new HashMap<String, Lecture>();
