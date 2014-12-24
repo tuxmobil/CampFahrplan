@@ -17,14 +17,18 @@ public class DataProcessorTask extends AsyncTask<List<DataMap>, Void, DataProces
     @Override
     protected ProcessorResult doInBackground(List<DataMap>... lists) {
         List<DataMap> lectures = lists[0];
+
         List<Lecture> runningLectures = new ArrayList<Lecture>();
+        List<Lecture> remainingLectures = new ArrayList<Lecture>();
         List<Lecture> nextHighlightLectures = new ArrayList<Lecture>();
         Map<String, Lecture> nextRoomLectures = new HashMap<String, Lecture>();
+
 
         long now = Calendar.getInstance().getTimeInMillis();
 
         for (DataMap lectureDataMap : lectures) {
             Lecture lecture = Lecture.createFromDataMap(lectureDataMap);
+
             if (now > lecture.endTime) {
                 // skip as we don't display old lectures
                 continue;
@@ -35,6 +39,15 @@ public class DataProcessorTask extends AsyncTask<List<DataMap>, Void, DataProces
                 continue;
             }
 
+            remainingLectures.add(lecture);
+        }
+
+        LectureSortingComparator comparator = new LectureSortingComparator();
+        Collections.sort(runningLectures, comparator);
+        // sort these now. we circumvent incorrect data (because of ordering) in the lists
+        Collections.sort(remainingLectures, comparator);
+
+        for (Lecture lecture : remainingLectures) {
             // running lectures are out of the game by now, so just get the next few highlights
             if (lecture.highlight && nextHighlightLectures.size() < 5) {
                 nextHighlightLectures.add(lecture);
@@ -46,14 +59,11 @@ public class DataProcessorTask extends AsyncTask<List<DataMap>, Void, DataProces
             }
         }
 
-        List<Lecture> nextLectures = new ArrayList<Lecture>(nextRoomLectures.values());
+        // room order has killed the time order, make it correct
+        List<Lecture> nextRoomLecturesList = new ArrayList<Lecture>(nextRoomLectures.values());
+        Collections.sort(nextRoomLecturesList, comparator);
 
-        LectureSortingComparator comparator = new LectureSortingComparator();
-        Collections.sort(runningLectures, comparator);
-        Collections.sort(nextHighlightLectures, comparator);
-        Collections.sort(nextLectures, comparator);
-
-        return new ProcessorResult(runningLectures, nextHighlightLectures, nextLectures);
+        return new ProcessorResult(runningLectures, nextHighlightLectures, nextRoomLecturesList);
     }
 
     private static class LectureSortingComparator implements Comparator<Lecture> {

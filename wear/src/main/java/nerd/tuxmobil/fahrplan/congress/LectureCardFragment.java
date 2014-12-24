@@ -53,6 +53,7 @@ public class LectureCardFragment extends CardFragment {
 
         if (!isToday) {
             builder.append(App.getContext().getString(R.string.day_x, lecture.day));
+            builder.append(", ");
         }
 
         builder.append(TIME_FORMATTER.format(lecture.startTime));
