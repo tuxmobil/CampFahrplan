@@ -132,6 +132,8 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
                     // we should only find one matching URI after all
                     DataMap dataMap = null;
                     for (Node foundNode : foundNodes.getNodes()) {
+                        LogUtil.debug("trying to get data from node: " + foundNode.getId());
+
                         DataApi.DataItemResult result = Wearable.DataApi.getDataItem(googleApiClient,
                                 getUriForLectureData(foundNode.getId())).await();
                         if (result.getStatus().isSuccess()) {
@@ -215,9 +217,23 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         dataEvents.close();
 
         for (DataEvent event : events) {
+            if (event.getType() == DataEvent.TYPE_DELETED) {
+                continue;
+            }
+
             if (event.getDataItem().getUri().getPath().equals(Constants.PATH_LECTURE_DATA)) {
                 DataMap map = DataMapItem.fromDataItem(event.getDataItem()).getDataMap();
-                processData(map.getDataMapArrayList(Constants.KEY_LECTURE_DATA));
+
+                List<DataMap> lectures = new ArrayList<DataMap>();
+                for (String dataKey : map.keySet()) {
+                    if (!dataKey.contains(Constants.KEY_LECTURE_DATA)) {
+                        continue;
+                    }
+
+                    lectures.add(map.getDataMap(dataKey));
+                }
+
+                processData(lectures);
             }
         }
     }
@@ -238,5 +254,9 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         };
 
         dataProcessorTask.execute(lectures);
+
+        for (DataMap lecture : lectures) {
+            LogUtil.debug("lecture: " + lecture.getString("title"));
+        }
     }
 }
