@@ -50,8 +50,6 @@ public class LectureGridPagingAdapter extends FragmentGridPagerAdapter {
 
     private ColorDrawable defaultBackground;
 
-    private ColorDrawable clearBackground;
-
     private LruCache<Point, Drawable> pageBackgrounds = new LruCache<Point, Drawable>(15) {
         @Override
         protected Drawable create(final Point page) {
@@ -77,7 +75,6 @@ public class LectureGridPagingAdapter extends FragmentGridPagerAdapter {
         this.context = context;
         rows = new ArrayList<Row>();
         defaultBackground = new ColorDrawable(R.color.dark_grey);
-        clearBackground = new ColorDrawable(android.R.color.transparent);
 
         initAdapter(now, nextHighlights, nextAllRooms);
     }
