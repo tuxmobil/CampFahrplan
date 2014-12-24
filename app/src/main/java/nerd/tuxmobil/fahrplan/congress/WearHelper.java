@@ -8,8 +8,6 @@ import java.util.List;
 
 public class WearHelper {
 
-    private static final String TAG = "CampFahrplan:WearHelper";
-
     public static List<Lecture> filterLectures(List<Lecture> lectures) {
         long now = Calendar.getInstance().getTimeInMillis();
 
