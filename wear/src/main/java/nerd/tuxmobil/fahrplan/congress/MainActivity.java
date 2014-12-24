@@ -123,7 +123,6 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
             protected List<DataMap> doInBackground(Void... params) {
                 NodeApi.GetConnectedNodesResult foundNodes = Wearable.NodeApi.getConnectedNodes(googleApiClient).await();
 
-                DataItemBuffer resultBuffer = null;
                 try {
                     // try to get the current data first
                     // see: http://stackoverflow.com/questions/24601251/what-is-the-uri-for-wearable-dataapi-getdataitem-after-using-putdatamaprequest
@@ -155,7 +154,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
                         lectures.add(dataMap.getDataMap(dataKey));
                     }
 
-                    if (lectures == null) {
+                    if (lectures.size() == 0) {
                         throw new Exception("no lectures in store");
                     }
 
@@ -168,10 +167,6 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
                         LogUtil.debug("requesting lecture data from " + node.getDisplayName());
                         Wearable.MessageApi.sendMessage(googleApiClient, node.getId(), Constants.PATH_REQUEST_NEW_LECTURE_DATA, new byte[] {});
                     }
-                } finally {
-                    if (resultBuffer != null) {
-                        resultBuffer.close();
-                    }
                 }
 
                 return null;
@@ -182,6 +177,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
                 super.onPostExecute(lectures);
 
                 if (lectures == null) {
+                    LogUtil.debug("waiting for requested data");
                     return;
                 }
 
@@ -254,9 +250,5 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         };
 
         dataProcessorTask.execute(lectures);
-
-        for (DataMap lecture : lectures) {
-            LogUtil.debug("lecture: " + lecture.getString("title"));
-        }
     }
 }

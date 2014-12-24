@@ -169,7 +169,7 @@ public class WearAppListenerService extends WearableListenerService {
         // attention: a update event will only be delivered to the wear app if something has really changed!
         DataMap map = dataMapRequest.getDataMap();
         for (DataMap lecture : lectures) {
-            map.putDataMap(KEY_LECTURE_DATA + lecture.getInt("id"), lecture);
+            map.putDataMap(KEY_LECTURE_DATA + lecture.getString("id"), lecture);
         }
 
         sendDataMap(dataMapRequest);
