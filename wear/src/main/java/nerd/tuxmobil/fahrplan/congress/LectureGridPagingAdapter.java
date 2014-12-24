@@ -23,7 +23,6 @@ import android.content.res.Resources;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.support.v4.util.LruCache;
 import android.support.wearable.view.CardFragment;
@@ -87,38 +86,32 @@ public class LectureGridPagingAdapter extends FragmentGridPagerAdapter {
         if (now.size() == 0) {
             rows.add(new Row(cardFragment(R.string.card_no_running_lectures_title, R.string.card_no_running_lectures_description)));
         } else {
-
+            addLectureRow(R.string.card_running_lectures_title, R.string.card_description_swipe_for_lectures, nextAllRooms);
         }
 
         if (nextHighlights.size() > 0) {
-            Fragment[] fragments = new Fragment[nextHighlights.size() + 1];
-            fragments[0] = cardFragment(R.string.card_next_highlight_lectures_title, R.string.card_next_highlight_lectures_description);
-
-            int counter = 1;
-
-            for (Lecture lecture : nextHighlights) {
-                fragments[counter] = lectureFragment(lecture);
-                ++counter;
-            }
-
-            rows.add(new Row(fragments));
+            addLectureRow(R.string.card_next_highlight_lectures_title, R.string.card_next_highlight_lectures_description, nextAllRooms);
         }
 
         if (nextAllRooms.size() == 0) {
             rows.add(new Row(cardFragment(R.string.card_no_next_lectures_title, R.string.card_no_next_lectures_description)));
         } else {
-            Fragment[] fragments = new Fragment[nextAllRooms.size() + 1];
-            fragments[0] = cardFragment(R.string.card_next_lectures_title, R.string.card_description_swipe_for_lectures);
-
-            int counter = 1;
-
-            for (Lecture lecture : nextAllRooms) {
-                fragments[counter] = lectureFragment(lecture);
-                ++counter;
-            }
-
-            rows.add(new Row(fragments));
+            addLectureRow(R.string.card_next_lectures_title, R.string.card_description_swipe_for_lectures, nextAllRooms);
         }
+    }
+
+    private void addLectureRow(int title, int description, List<Lecture> nextAllRooms) {
+        Fragment[] fragments = new Fragment[nextAllRooms.size() + 1];
+        fragments[0] = cardFragment(title, description);
+
+        int counter = 1;
+
+        for (Lecture lecture : nextAllRooms) {
+            fragments[counter] = lectureFragment(lecture);
+            ++counter;
+        }
+
+        rows.add(new Row(fragments));
     }
 
     private CardFragment cardFragment(int titleRes, int textRes) {

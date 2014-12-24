@@ -6,6 +6,8 @@ import com.google.android.gms.wearable.DataMap;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,8 +35,7 @@ public class DataProcessorTask extends AsyncTask<List<DataMap>, Void, DataProces
                 continue;
             }
 
-            // running lectures are out of the game by now, all others are sorted by time
-            // so just get the next few highlights
+            // running lectures are out of the game by now, so just get the next few highlights
             if (lecture.highlight && nextHighlightLectures.size() < 5) {
                 nextHighlightLectures.add(lecture);
             }
@@ -45,8 +46,29 @@ public class DataProcessorTask extends AsyncTask<List<DataMap>, Void, DataProces
             }
         }
 
-        return new ProcessorResult(runningLectures, nextHighlightLectures,
-                new ArrayList<Lecture>(nextRoomLectures.values()));
+        List<Lecture> nextLectures = new ArrayList<Lecture>(nextRoomLectures.values());
+
+        LectureSortingComparator comparator = new LectureSortingComparator();
+        Collections.sort(runningLectures, comparator);
+        Collections.sort(nextHighlightLectures, comparator);
+        Collections.sort(nextLectures, comparator);
+
+        return new ProcessorResult(runningLectures, nextHighlightLectures, nextLectures);
+    }
+
+    private static class LectureSortingComparator implements Comparator<Lecture> {
+
+        @Override
+        public int compare(Lecture lhs, Lecture rhs) {
+            if (lhs.startTime < rhs.startTime) {
+                return -1;
+            } else if (lhs.startTime > rhs.startTime) {
+                return 1;
+            }
+
+            return 0;
+        }
+
     }
 
     public static class ProcessorResult {
