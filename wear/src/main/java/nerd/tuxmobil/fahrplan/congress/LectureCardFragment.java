@@ -52,20 +52,13 @@ public class LectureCardFragment extends CardFragment {
         SpannableStringBuilder builder = new SpannableStringBuilder();
 
         if (!isToday) {
-            String dayString = App.getContext().getString(R.string.day_x, lecture.day + 1);
-            builder.append(dayString);
-            builder.setSpan(new StyleSpan(Typeface.BOLD), 0, dayString.length(),
-                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            builder.append(App.getContext().getString(R.string.day_x, lecture.day));
         }
 
-        String timeString = TIME_FORMATTER.format(lecture.startTime);
-        int length = builder.length();
-        builder.append(timeString);
-        builder.setSpan(new StyleSpan(Typeface.BOLD), length, length + timeString.length(),
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        builder.append(TIME_FORMATTER.format(lecture.startTime));
         builder.append(" ");
 
-        length = builder.length();
+        int length = builder.length();
         builder.append(lecture.room);
         builder.setSpan(new RelativeSizeSpan(0.75F), length, length + lecture.room.length(),
                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);

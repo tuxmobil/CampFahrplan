@@ -84,7 +84,7 @@ public class LectureGridPagingAdapter extends FragmentGridPagerAdapter {
 
     private void initAdapter(List<Lecture> now, List<Lecture> nextHighlights, List<Lecture> nextAllRooms) {
         if (now.size() == 0) {
-            rows.add(new Row(cardFragment(R.string.card_no_running_lectures_title, R.string.card_no_running_lectures_description)));
+            rows.add(new Row(cardFragment(R.string.card_running_lectures_title, R.string.card_no_running_lectures_description)));
         } else {
             addLectureRow(R.string.card_running_lectures_title, R.string.card_description_swipe_for_lectures, nextAllRooms);
         }
