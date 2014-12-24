@@ -46,6 +46,7 @@ public class WearHelper {
         lectureMap.putBoolean("highlight", lecture.highlight);
         lectureMap.putLong("start_time", lecture.dateUTC);
         lectureMap.putLong("end_time", lecture.dateUTC + (lecture.duration * 60000));
+        lectureMap.putInt("day", lecture.day);
         lectureMap.putInt("track_color", LectureColorHelper.getBackgroundColor(lecture.track));
 
         return lectureMap;

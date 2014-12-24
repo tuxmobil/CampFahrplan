@@ -16,6 +16,8 @@ public class Lecture {
 
     public long endTime;
 
+    public int day;
+
     public int trackColor;
 
     public static Lecture createFromDataMap(DataMap map) {
@@ -27,6 +29,7 @@ public class Lecture {
         lecture.highlight = map.getBoolean("highlight");
         lecture.startTime = map.getLong("start_time");
         lecture.endTime = map.getLong("end_time");
+        lecture.day = map.getInt("day");
         lecture.trackColor = map.getInt("track_color");
 
         return lecture;
