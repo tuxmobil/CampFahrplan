@@ -26,7 +26,7 @@ public class Lecture {
         lecture.title = map.getString("title");
         lecture.speakers = map.getString("speakers");
         lecture.room = map.getString("room");
-        lecture.highlight = map.getBoolean("highlight");
+        lecture.highlight = map.getBoolean("highlight", false);
         lecture.startTime = map.getLong("start_time");
         lecture.endTime = map.getLong("end_time");
         lecture.day = map.getInt("day");
