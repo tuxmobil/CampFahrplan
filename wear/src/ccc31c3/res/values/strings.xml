@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">31C3 Schedule</string>
+    <string name="app_name">Fahrplan</string>
+
+    <string name="day_x">Day %d</string> <!-- for lectures that are not on the current day -->
+
+    <string name="activity_main_loading_data">Loading data…</string>
+    <string name="activity_main_connection_failed">Connecting to the phone app has failed</string>
+
+    <string name="card_running_lectures_title">Current lectures</string>
+    <string name="card_no_running_lectures_description">No lectures running at the moment</string>
+    <string name="card_description_swipe_for_lectures">Swipe right to view lectures</string>
+
+    <string name="card_next_highlight_lectures_title">Next favorites</string>
+    <string name="card_next_highlight_lectures_description">Swipe right to view upcoming favorite lectures</string>
+
+    <string name="card_no_next_lectures_title">No upcoming lectures</string>
+    <string name="card_no_next_lectures_description">There are no upcoming lectures at the moment</string>
+    <string name="card_next_lectures_title">Upcoming lectures</string>
 
 </resources>
