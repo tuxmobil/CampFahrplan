@@ -71,13 +71,11 @@
             android:theme="@style/Theme.Congress.NoActionBar"
             android:label="@string/schedule_changes" >
         </activity>
-<<<<<<< HEAD
         <activity
             android:name="nerd.tuxmobil.fahrplan.congress.StarredListActivity"
             android:theme="@style/Theme.Congress.NoActionBar"
             android:label="@string/starred_lectures" >
         </activity>
-=======
 
         <service
                 android:name=".WearAppListenerService"
@@ -87,6 +85,5 @@
                 <action android:name="com.google.android.gms.wearable.BIND_LISTENER" />
             </intent-filter>
         </service>
->>>>>>> several fixes; logging
     </application>
 </manifest>
