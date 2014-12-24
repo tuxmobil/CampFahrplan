@@ -5,8 +5,12 @@ import com.google.android.gms.wearable.DataMap;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 public class WearHelper {
+
+    private static final Map<String, Integer> TRACK_BACKGROUNDS = TrackBackgrounds.getTrackBackgroundColorNormal(MyApp.app.getApplicationContext());
+    private static final Map<String, Integer> TRACK_BACKGROUNDS_HI = TrackBackgrounds.getTrackBackgroundColorHighLight(MyApp.app.getApplicationContext());
 
     public static List<Lecture> filterLectures(List<Lecture> lectures) {
         long now = Calendar.getInstance().getTimeInMillis();
@@ -45,7 +49,8 @@ public class WearHelper {
         lectureMap.putLong("start_time", lecture.dateUTC);
         lectureMap.putLong("end_time", lecture.dateUTC + (lecture.duration * 60000));
         lectureMap.putInt("day", lecture.day);
-        lectureMap.putInt("track_color", LectureColorHelper.getBackgroundColor(lecture.track));
+        int colorId = lecture.highlight ? TRACK_BACKGROUNDS_HI.get(lecture.track) : TRACK_BACKGROUNDS.get(lecture.track);
+        lectureMap.putInt("track_color", MyApp.app.getApplicationContext().getResources().getColor(colorId));
 
         return lectureMap;
     }

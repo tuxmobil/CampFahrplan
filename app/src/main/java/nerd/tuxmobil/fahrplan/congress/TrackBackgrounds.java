@@ -85,6 +85,17 @@ public class TrackBackgrounds {
         return buildTrackBackgroundHashMap(drawableNames, "event_border_highlight", "drawable", context);
     }
 
+    public static HashMap<String, Integer> getTrackBackgroundColorNormal(Context context) {
+        Map<String, String> drawableNames = getHashMapResource(context, R.xml.track_resource_names);
+        return buildTrackBackgroundHashMap(drawableNames, "event_border_default", "color", context);
+    }
+
+    public static HashMap<String, Integer> getTrackBackgroundColorHighLight(Context context) {
+        Map<String, String> drawableNames = getHashMapResource(context,
+                R.xml.track_resource_names);
+        return buildTrackBackgroundHashMap(drawableNames, "event_border_highlight", "color", context);
+    }
+
     public static HashMap<String, Integer> getTrackAccentColorNormal(Context context) {
         Map<String, String> drawableNames = getHashMapResource(context, R.xml.track_resource_names);
         return buildTrackBackgroundHashMap(drawableNames, "event_border_accent", "color", context);
