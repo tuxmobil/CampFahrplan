@@ -45,6 +45,8 @@ public class WearAppListenerService extends WearableListenerService {
 
     public static final String ACTION_REFRESH_SINGLE_LECTURE_DATA = "nerd.tuxmobil.fahrplan.congress.REFRESH_SINGLE_LECTURE_DATA";
 
+    public static final String ACTION_DELETE_ALL_LECTURE_DATA = "nerd.tuxmobil.fahrplan.congress.DELETE_ALL_LECTURE_DATA";
+
     public static final String PATH_REQUEST_NEW_LECTURE_DATA = "/request-new-lecture-data";
 
     public static final String PATH_LECTURE_DATA = "/lecture-data";
@@ -67,13 +69,13 @@ public class WearAppListenerService extends WearableListenerService {
         googleApiClient.connect();
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public static void requestDeleteAllLectureData(Context context) {
+        Log.d(TAG, "requestDeleteAllLectureData");
 
-        if (googleApiClient.isConnected()) {
-            googleApiClient.disconnect();
-        }
+        Intent intent = new Intent(context, WearAppListenerService.class);
+        intent.setAction(ACTION_DELETE_ALL_LECTURE_DATA);
+
+        context.startService(intent);
     }
 
     public static void requestRefreshSingleLectureData(Context context, Lecture lecture) {
@@ -105,6 +107,8 @@ public class WearAppListenerService extends WearableListenerService {
                 doUpdateAllLectures();
             } else if (ACTION_REFRESH_SINGLE_LECTURE_DATA.equals(intent.getAction())) {
                 doUpdateSingleLecture();
+            } else if (ACTION_DELETE_ALL_LECTURE_DATA.equals(intent.getAction())) {
+                doDeleteLectureData();
             }
         }
 
@@ -147,12 +151,29 @@ public class WearAppListenerService extends WearableListenerService {
         }).start();
     }
 
+    private void doDeleteLectureData() {
+        Log.i(TAG, "ACTION_DELETE_ALL_LECTURE_DATA command received");
+
+        // according to javadoc of onStartCommand, long operations should be started within e.g. a thread
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Log.d(TAG, "run in background for doDeleteLectureData");
+                handleDeleteLectureData();
+
+                Log.d(TAG, "stopping service again");
+                stopSelf();
+            }
+        }).start();
+    }
+
     @Override
     public void onMessageReceived(MessageEvent messageEvent) {
         Log.d(TAG, "onMessageReceived: " + messageEvent);
 
         if (messageEvent.getPath().equals(PATH_REQUEST_NEW_LECTURE_DATA)) {
-            handleSendLectureData(WearHelper.buildDataMapListFromLectures(WearHelper.filterLectures(FahrplanMisc.loadLecturesForAllDays(this))));
+            handleSendLectureData(WearHelper.buildDataMapListFromLectures(WearHelper.filterLectures(
+                    FahrplanMisc.loadLecturesForAllDays(this))));
         }
     }
 
@@ -176,13 +197,13 @@ public class WearAppListenerService extends WearableListenerService {
             return;
         }
 
-        // get previous datamap (as we override the existing one otherwise!)
         NodeApi.GetLocalNodeResult nodeResult = Wearable.NodeApi.getLocalNode(googleApiClient).await();
         if (!nodeResult.getStatus().isSuccess()) {
             Log.e(TAG, "handleUpdateSingleLectureData failed as local node discovery was unsuccessful");
             return;
         }
 
+        // get previous datamap (as we override the existing one otherwise!)
         DataMap dataMap = null;
         DataApi.DataItemResult result = Wearable.DataApi.getDataItem(googleApiClient,
                     getUriForLectureData(nodeResult.getNode().getId())).await();
@@ -200,6 +221,25 @@ public class WearAppListenerService extends WearableListenerService {
 
         dataMapRequest.getDataMap().putAll(dataMap);
         sendDataMap(dataMapRequest);
+    }
+
+    private void handleDeleteLectureData() {
+        if (!handleGoogleApiConnect()) {
+            return;
+        }
+
+        NodeApi.GetLocalNodeResult nodeResult = Wearable.NodeApi.getLocalNode(googleApiClient).await();
+        if (!nodeResult.getStatus().isSuccess()) {
+            Log.e(TAG, "handleDeleteLectureData failed as local node discovery was unsuccessful");
+            return;
+        }
+
+        Uri dataUri = getUriForLectureData(nodeResult.getNode().getId());
+        DataApi.DataItemResult result = Wearable.DataApi.getDataItem(googleApiClient, dataUri).await();
+        if (result.getStatus().isSuccess()) {
+            Log.d(TAG, "found data, deleting now");
+            Wearable.DataApi.deleteDataItems(googleApiClient, dataUri).await();
+        }
     }
 
     private Uri getUriForLectureData(String nodeId) {
