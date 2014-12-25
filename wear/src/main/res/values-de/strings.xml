@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Fahrplan</string>
+
+    <string name="day_x">Tag %d</string> <!-- for lectures that are not on the current day -->
+
+    <string name="activity_main_loading_data">Lade Daten…</string>
+    <string name="activity_main_connection_failed">Verbindungsaufbau zur App am Telefon schlug fehl</string>
+
+    <string name="card_running_lectures_title">Laufende Vorträge</string>
+    <string name="card_no_running_lectures_description">Im Moment werden keine Vorträge abgehalten</string>
+    <string name="card_description_swipe_for_lectures">Nach rechts wischen, um Vorträge anzusehen</string>
+
+    <string name="card_next_highlight_lectures_title">Markierte Vorträge</string>
+    <string name="card_next_highlight_lectures_description">Nach rechts wischen, um markierte Vorträge anzusehen</string>
+
+    <string name="card_no_next_lectures_title">Weitere Vorträge</string>
+    <string name="card_no_next_lectures_description">Im Moment gibt es keine kommenden Vorträge mehr</string>
+    <string name="card_next_lectures_title">Weitere Vorträge</string>
+
+</resources>
