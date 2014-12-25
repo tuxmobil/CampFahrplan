@@ -23,7 +23,6 @@ public class DataProcessorTask extends AsyncTask<List<DataMap>, Void, DataProces
         List<Lecture> nextHighlightLectures = new ArrayList<Lecture>();
         Map<String, Lecture> nextRoomLectures = new HashMap<String, Lecture>();
 
-
         long now = Calendar.getInstance().getTimeInMillis();
 
         for (DataMap lectureDataMap : lectures) {
