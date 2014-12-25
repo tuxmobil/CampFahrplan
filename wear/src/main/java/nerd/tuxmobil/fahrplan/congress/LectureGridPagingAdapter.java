@@ -67,7 +67,7 @@ public class LectureGridPagingAdapter extends FragmentGridPagerAdapter {
         if (now.size() == 0) {
             rows.add(new Row(cardFragment(R.string.card_running_lectures_title, R.string.card_no_running_lectures_description)));
         } else {
-            addLectureRow(R.string.card_running_lectures_title, R.string.card_description_swipe_for_lectures, nextAllRooms);
+            addLectureRow(R.string.card_running_lectures_title, R.string.card_description_swipe_for_lectures, now);
         }
 
         if (nextHighlights.size() > 0) {
