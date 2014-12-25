@@ -38,14 +38,15 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
     private DotsPageIndicator dotsPageIndicator;
     private GridViewPager pager;
     private DataProcessorTask dataProcessorTask;
+    private AsyncTask<Void, Void, List<DataMap>> runningCollectorTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        progressDialog = ProgressDialog.show(this, getString(R.string.activity_main_loading_data),
-                null, true, true);
+        progressDialog = ProgressDialog.show(this, getString(R.string.app_name),
+                getString(R.string.activity_main_loading_data), true, true);
         progressDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
@@ -97,6 +98,10 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
     protected void onStop() {
         super.onStop();
 
+        if (runningCollectorTask != null && !runningCollectorTask.isCancelled()) {
+            runningCollectorTask.cancel(true);
+        }
+
         if (dataProcessorTask != null && !dataProcessorTask.isCancelled()) {
             dataProcessorTask.cancel(true);
         }
@@ -116,11 +121,14 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         Wearable.DataApi.addListener(googleApiClient, this);
 
         // check if lecture data is available ... if not, get the data from the app
-        new AsyncTask<Void, Void, List<DataMap>>() {
+        runningCollectorTask =  new AsyncTask<Void, Void, List<DataMap>>() {
 
             @Override
             protected List<DataMap> doInBackground(Void... params) {
-                NodeApi.GetConnectedNodesResult foundNodes = Wearable.NodeApi.getConnectedNodes(googleApiClient).await();
+                LogUtil.debug("doInBackground for data retrieval called");
+
+                NodeApi.GetConnectedNodesResult foundNodes = Wearable.NodeApi
+                        .getConnectedNodes(googleApiClient).await();
 
                 try {
                     // try to get the current data first
@@ -200,6 +208,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
     public void onConnectionFailed(ConnectionResult connectionResult) {
         Wearable.DataApi.removeListener(googleApiClient, this);
 
+        progressDialog.setOnDismissListener(null);
         progressDialog.cancel();
         finish();
 
@@ -208,6 +217,8 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
 
     @Override
     public void onDataChanged(DataEventBuffer dataEvents) {
+        LogUtil.debug("onDataChanged");
+
         final List<DataEvent> events = FreezableUtils.freezeIterable(dataEvents);
         dataEvents.close();
 
@@ -234,6 +245,8 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
     }
 
     private void processData(List<DataMap> lectures) {
+        LogUtil.debug("processData");
+
         dataProcessorTask = new DataProcessorTask() {
             @Override
             protected void onPostExecute(ProcessorResult processorResult) {
