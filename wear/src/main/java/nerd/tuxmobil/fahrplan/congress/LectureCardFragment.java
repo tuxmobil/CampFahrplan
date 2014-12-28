@@ -34,7 +34,7 @@ public class LectureCardFragment extends CardFragment {
     }
 
     @Override
-    protected View onCreateContentView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateContentView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = super.onCreateContentView(inflater, container, savedInstanceState);
 
         boolean isNow = System.currentTimeMillis() >= lecture.startTime && System.currentTimeMillis() <= lecture.endTime;
