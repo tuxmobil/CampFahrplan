@@ -33,6 +33,8 @@ public class DataProcessorTask extends AsyncTask<List<DataMap>, Void, DataProces
                 continue;
             }
 
+            LogUtil.debug(String.format("Processor.doInBackground: %1$s: %2$d >= %3$d && %2$d <= %4$d",
+                    lecture.title, now, lecture.startTime, lecture.endTime));
             if (now >= lecture.startTime && now <= lecture.endTime) {
                 runningLectures.add(lecture);
                 continue;
