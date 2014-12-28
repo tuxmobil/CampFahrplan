@@ -67,7 +67,7 @@ android {
             applicationId "nerd.tuxmobil.fahrplan.congress"
             signingConfig signingConfigs.ccc30c3
             buildConfigField "String", "SCHEDULE_DOMAIN", '"events.ccc.de"'
-            buildConfigField "String", "SCHEDULE_DOMAIN_PART", '"http://events.ccc.de"'
+            buildConfigField "String", "SCHEDULE_DOMAIN_PART", '"https://events.ccc.de"'
             buildConfigField "String", "SCHEDULE_EVENT_PART", '"/events/%1$s.html"'
             buildConfigField "String", "SCHEDULE_PART", '"/congress/2013/Fahrplan"'
             buildConfigField "String", "SCHEDULE_PATH", '"/congress/2013/Fahrplan/schedule.xml"'
@@ -84,7 +84,7 @@ android {
             applicationId "nerd.tuxmobil.fahrplan.congress"
             signingConfig signingConfigs.ccc31c3
             buildConfigField "String", "SCHEDULE_DOMAIN", '"events.ccc.de"'
-            buildConfigField "String", "SCHEDULE_DOMAIN_PART", '"http://events.ccc.de"'
+            buildConfigField "String", "SCHEDULE_DOMAIN_PART", '"https://events.ccc.de"'
             buildConfigField "String", "SCHEDULE_EVENT_PART", '"/events/%1$s.html"'
             buildConfigField "String", "SCHEDULE_PART", '"/congress/2014/Fahrplan"'
             buildConfigField "String", "SCHEDULE_PATH", '"/congress/2014/Fahrplan/schedule.xml"'

@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">31C3 Fahrplan</string>
     <string name="conference_url">
-        <![CDATA[<a href="http://events.ccc.de/congress/2014/">http://events.ccc.de/congress/2014/</a>]]>
+        <![CDATA[<a href="https://events.ccc.de/congress/2014/">https://events.ccc.de/congress/2014/</a>]]>
     </string>
     <string name="source_code">
         <![CDATA[<a href="http://github.com/tuxmobil/CampFahrplan">Quellcode</a>]]>

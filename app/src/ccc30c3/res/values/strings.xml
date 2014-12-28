@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">30C3 Schedule</string>
     <string name="conference_url">
-		<![CDATA[<a href="http://events.ccc.de/congress/2013/">http://events.ccc.de/congress/2013/</a>]]>
+		<![CDATA[<a href="https://events.ccc.de/congress/2013/">https://events.ccc.de/congress/2013/</a>]]>
     </string>
     <string name="source_code">
 		<![CDATA[<a href="http://github.com/tuxmobil/CampFahrplan">Source code</a>]]>
