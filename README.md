@@ -55,7 +55,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ```
 
-[ccc-events]: http://events.ccc.de
+[ccc-events]: https://events.ccc.de
 [playstore]: https://play.google.com/store/apps/details?id=nerd.tuxmobil.fahrplan.congress
 [pentabarf]: https://github.com/nevs/pentabarf
 [frab]: https://github.com/frab/frab
