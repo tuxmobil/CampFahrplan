@@ -58,7 +58,7 @@ public class LectureGridPagingAdapter extends FragmentGridPagerAdapter {
         super(fm);
         this.context = context;
         rows = new ArrayList<Row>();
-        defaultBackground = new ColorDrawable(R.color.dark_grey);
+        defaultBackground = new ColorDrawable(android.R.color.darker_gray);
 
         initAdapter(now, nextHighlights, nextAllRooms);
     }
