@@ -221,6 +221,7 @@ class parser extends AsyncTask<String, Void, Boolean> {
             String date = "";
             int room_index = 0;
             int room_map_index = 0;
+            boolean schedule_complete = false;
             HashMap<String, Integer> roomsMap = new HashMap<String, Integer>();
             while (eventType != XmlPullParser.END_DOCUMENT && !done && !isCancelled()) {
                 String name = null;
