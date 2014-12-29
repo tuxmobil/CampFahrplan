@@ -40,6 +40,16 @@ android {
             applicationIdSuffix ".debug"
             zipAlignEnabled true
         }
+        /*debugWithWear {
+            versionNameSuffix "-DEBUG"
+            applicationIdSuffix ".debug"
+            zipAlignEnabled true
+
+            dependencies {
+                compile 'com.google.android.gms:play-services-wearable:6.1.71'
+                wearApp project(':wear')
+            }
+        }*/
         release {
             zipAlignEnabled true
             minifyEnabled true
@@ -62,10 +72,30 @@ android {
         }
     }
 
+    /*sourceSets {
+        main {
+            java.srcDirs = ['/src/main/java']
+            res.srcDirs = ['/src/main/res']
+        }
+
+        wearSupport {
+            java.srcDirs = ['/src/wearSupport/java']
+            res.srcDirs = ['/src/wearSupport/res']
+        }
+
+        ccc31c3 {
+            java.srcDirs = ['/src/ccc31c3/java']
+            res.srcDirs = ['/src/ccc31c3/res']
+        }
+    }*/
+
+    flavorDimensions 'event', 'feature'
+
     productFlavors {
         ccc30c3 {
             applicationId "nerd.tuxmobil.fahrplan.congress"
             signingConfig signingConfigs.ccc30c3
+            flavorDimension 'event'
             buildConfigField "String", "SCHEDULE_DOMAIN", '"events.ccc.de"'
             buildConfigField "String", "SCHEDULE_DOMAIN_PART", '"http://events.ccc.de"'
             buildConfigField "String", "SCHEDULE_EVENT_PART", '"/events/%1$s.html"'
@@ -83,6 +113,7 @@ android {
         ccc31c3 {
             applicationId "nerd.tuxmobil.fahrplan.congress"
             signingConfig signingConfigs.ccc31c3
+            flavorDimension 'event'
             buildConfigField "String", "SCHEDULE_DOMAIN", '"events.ccc.de"'
             buildConfigField "String", "SCHEDULE_DOMAIN_PART", '"http://events.ccc.de"'
             buildConfigField "String", "SCHEDULE_EVENT_PART", '"/events/%1$s.html"'
@@ -97,12 +128,21 @@ android {
             buildConfigField "boolean", "SCHEDULE_SUPPORTS_HTTPS", "true"
             buildConfigField "String", "SCHEDULE_FEEDBACK_URL", '"https://frab.cccv.de/en/31C3/public/events/%s/feedback/new"'
         }
+        withWear {
+            flavorDimension 'feature'
+
+            dependencies {
+                compile 'com.google.android.gms:play-services-wearable:6.1.71'
+                wearApp project(':wear')
+            }
+        }
+        noWear {
+            flavorDimension 'feature'
+        }
     }
 }
 
 dependencies {
     compile "com.android.support:appcompat-v7:21.0.+"
     compile 'com.afollestad:material-dialogs:0.4.6'
-    compile 'com.google.android.gms:play-services-wearable:6.1.71'
-    wearApp project(':wear')
 }
