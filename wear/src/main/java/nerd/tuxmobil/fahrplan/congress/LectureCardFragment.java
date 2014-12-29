@@ -39,15 +39,36 @@ public class LectureCardFragment extends CardFragment {
 
         boolean isNow = System.currentTimeMillis() >= lecture.startTime && System.currentTimeMillis() <= lecture.endTime;
 
-        ((TextView) v.findViewById(R.id.title)).setText(isNow ? lecture.room : formatTitleForNext());
+        ((TextView) v.findViewById(R.id.title)).setText(isNow ? formatTitleForNow() : formatTitleForNext());
         ((TextView) v.findViewById(R.id.text)).setText(lecture.title);
         return v;
     }
 
+    private CharSequence formatTitleForNow() {
+        SpannableStringBuilder builder = new SpannableStringBuilder();
+
+        builder.append(lecture.room);
+        builder.append(" ");
+
+        int length = builder.length();
+        String untilStr = App.getContext().getString(R.string.card_running_until_time,
+                TIME_FORMATTER.format(lecture.endTime));
+        builder.append(untilStr);
+        builder.setSpan(new RelativeSizeSpan(0.75F), length, length + untilStr.length(),
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        return builder;
+    }
+
     private CharSequence formatTitleForNext() {
-        boolean isToday = lecture.startTime / 86400 == System.currentTimeMillis() / 86400;
+        boolean isToday = lecture.startTime / 86400000 == System.currentTimeMillis() / 86400000;
 
         SpannableStringBuilder builder = new SpannableStringBuilder();
+
+        builder.append(lecture.room);
+        builder.append(" ");
+
+        int lengthBeforeFormatChange = builder.length();
 
         if (!isToday) {
             builder.append(App.getContext().getString(R.string.day_x, lecture.day));
@@ -55,11 +76,7 @@ public class LectureCardFragment extends CardFragment {
         }
 
         builder.append(TIME_FORMATTER.format(lecture.startTime));
-        builder.append(" ");
-
-        int length = builder.length();
-        builder.append(lecture.room);
-        builder.setSpan(new RelativeSizeSpan(0.75F), length, length + lecture.room.length(),
+        builder.setSpan(new RelativeSizeSpan(0.75F), lengthBeforeFormatChange, builder.length(),
                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         return builder;

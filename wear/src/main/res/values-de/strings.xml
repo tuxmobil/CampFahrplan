@@ -11,6 +11,7 @@
     <string name="card_running_lectures_title">Laufende Vorträge</string>
     <string name="card_no_running_lectures_description">Im Moment werden keine Vorträge abgehalten</string>
     <string name="card_description_swipe_for_lectures">Nach rechts wischen, um Vorträge anzusehen</string>
+    <string name="card_running_until_time">bis %s</string>
 
     <string name="card_next_highlight_lectures_title">Markierte Vorträge</string>
     <string name="card_next_highlight_lectures_description">Nach rechts wischen, um markierte Vorträge anzusehen</string>
