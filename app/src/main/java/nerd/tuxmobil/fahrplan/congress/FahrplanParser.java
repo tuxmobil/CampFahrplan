@@ -229,6 +229,12 @@ class parser extends AsyncTask<String, Void, Boolean> {
                         lectures = new LectureList();
                         meta = new MetaInfo();
                         break;
+                    case XmlPullParser.END_TAG:
+                        name = parser.getName();
+                        if (name.equals("schedule")) {
+                            schedule_complete = true;
+                        }
+                        break;
                     case XmlPullParser.START_TAG:
                         name = parser.getName();
                         if (name.equals("version")) {
@@ -453,7 +459,7 @@ class parser extends AsyncTask<String, Void, Boolean> {
                 }
                 eventType = parser.next();
             }
-            meta.numdays = numdays;
+            if (!schedule_complete) return false;
             if (isCancelled()) {
                 return false;
             }
@@ -463,6 +469,7 @@ class parser extends AsyncTask<String, Void, Boolean> {
                 return false;
             }
             WearAppListenerService.requestRefreshLectureData(context, lectures);
+            meta.numdays = numdays;
             meta.eTag = eTag;
             storeMeta(context, meta);
             return true;
