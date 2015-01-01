@@ -40,16 +40,6 @@ android {
             applicationIdSuffix ".debug"
             zipAlignEnabled true
         }
-        /*debugWithWear {
-            versionNameSuffix "-DEBUG"
-            applicationIdSuffix ".debug"
-            zipAlignEnabled true
-
-            dependencies {
-                compile 'com.google.android.gms:play-services-wearable:6.1.71'
-                wearApp project(':wear')
-            }
-        }*/
         release {
             zipAlignEnabled true
             minifyEnabled true
@@ -71,23 +61,6 @@ android {
             keyPassword props['signing.ccc31c3-release.keyPassword']
         }
     }
-
-    /*sourceSets {
-        main {
-            java.srcDirs = ['/src/main/java']
-            res.srcDirs = ['/src/main/res']
-        }
-
-        wearSupport {
-            java.srcDirs = ['/src/wearSupport/java']
-            res.srcDirs = ['/src/wearSupport/res']
-        }
-
-        ccc31c3 {
-            java.srcDirs = ['/src/ccc31c3/java']
-            res.srcDirs = ['/src/ccc31c3/res']
-        }
-    }*/
 
     flavorDimensions 'event', 'feature'
 
