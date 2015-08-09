@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply from: 'sdktools.gradle'
 
 Properties props = new Properties()
 File gradlePropertiesFile = file("gradle.properties")
@@ -13,8 +14,10 @@ props.load(new FileInputStream(gradlePropertiesFile))
 
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion "21.1.1"
+    // compileSdkVersion 21
+    compileSdkVersion project.getSDKIfPossible(21)
+    // buildToolsVersion "21.1.1"
+    buildToolsVersion project.getHighestAvailableTools("21.1.1")
 
     defaultConfig {
         versionCode 34
@@ -39,6 +42,7 @@ android {
             versionNameSuffix "-DEBUG"
             applicationIdSuffix ".debug"
             zipAlignEnabled true
+            debuggable true
         }
         release {
             zipAlignEnabled true
@@ -48,31 +52,31 @@ android {
     }
 
     signingConfigs {
-        ccc31c3 {
-            storeFile file(props['signing.ccc31c3-release.keystoreFilePath'])
-            storePassword props['signing.ccc31c3-release.keystorePassword']
-            keyAlias props['signing.ccc31c3-release.keyAlias']
-            keyPassword props['signing.ccc31c3-release.keyPassword']
+        camp2015 {
+            storeFile file(props['signing.camp2015-release.keystoreFilePath'])
+            storePassword props['signing.camp2015-release.keystorePassword']
+            keyAlias props['signing.camp2015-release.keyAlias']
+            keyPassword props['signing.camp2015-release.keyPassword']
         }
     }
 
     productFlavors {
-        ccc31c3 {
+        camp2015 {
             applicationId "nerd.tuxmobil.fahrplan.congress"
-            signingConfig signingConfigs.ccc31c3
+            signingConfig signingConfigs.camp2015
             buildConfigField "String", "SCHEDULE_DOMAIN", '"events.ccc.de"'
             buildConfigField "String", "SCHEDULE_DOMAIN_PART", '"http://events.ccc.de"'
             buildConfigField "String", "SCHEDULE_EVENT_PART", '"/events/%1$s.html"'
-            buildConfigField "String", "SCHEDULE_PART", '"/congress/2014/Fahrplan"'
-            buildConfigField "String", "SCHEDULE_PATH", '"/congress/2014/Fahrplan/schedule.xml"'
-            buildConfigField "int", "SCHEDULE_FIRST_DAY_START_YEAR", "2014"
-            buildConfigField "int", "SCHEDULE_FIRST_DAY_START_MONTH", "12"
-            buildConfigField "int", "SCHEDULE_FIRST_DAY_START_DAY", "27"
-            buildConfigField "int", "SCHEDULE_LAST_DAY_END_YEAR", "2014"
-            buildConfigField "int", "SCHEDULE_LAST_DAY_END_MONTH", "12"
-            buildConfigField "int", "SCHEDULE_LAST_DAY_END_DAY", "31"
+            buildConfigField "String", "SCHEDULE_PART", '"/camp/2015/Fahrplan"'
+            buildConfigField "String", "SCHEDULE_PATH", '"/camp/2015/Fahrplan/schedule.xml"'
+            buildConfigField "int", "SCHEDULE_FIRST_DAY_START_YEAR", "2015"
+            buildConfigField "int", "SCHEDULE_FIRST_DAY_START_MONTH", "8"
+            buildConfigField "int", "SCHEDULE_FIRST_DAY_START_DAY", "13"
+            buildConfigField "int", "SCHEDULE_LAST_DAY_END_YEAR", "2015"
+            buildConfigField "int", "SCHEDULE_LAST_DAY_END_MONTH", "8"
+            buildConfigField "int", "SCHEDULE_LAST_DAY_END_DAY", "17"
             buildConfigField "boolean", "SCHEDULE_SUPPORTS_HTTPS", "true"
-            buildConfigField "String", "SCHEDULE_FEEDBACK_URL", '"https://frab.cccv.de/en/31C3/public/events/%s/feedback/new"'
+            buildConfigField "String", "SCHEDULE_FEEDBACK_URL", '"https://frab.cccv.de/en/camp2015/public/events/%s/feedback/new"'
         }
     }
 }
@@ -80,4 +84,8 @@ android {
 dependencies {
     compile "com.android.support:appcompat-v7:21.0.+"
     compile 'com.afollestad:material-dialogs:0.4.6'
+}
+
+repositories {
+    maven { url 'http://clinker.47deg.com/nexus/content/groups/public' }
 }
