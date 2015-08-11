@@ -17,11 +17,11 @@ android {
     buildToolsVersion "21.1.1"
 
     defaultConfig {
-        versionCode 34
-        versionName "1.30.4"
-        minSdkVersion 14
+        applicationId "nerd.tuxmobil.fahrplan.congress"
+        minSdkVersion 20
         targetSdkVersion 21
-        project.ext.set("archivesBaseName", "Fahrplan");
+        versionCode 1
+        versionName "1.0"
     }
 
     applicationVariants.all { variant ->
@@ -60,38 +60,22 @@ android {
 
     productFlavors {
         ccc31c3 {
-            applicationId "nerd.tuxmobil.fahrplan.congress"
-            signingConfig signingConfigs.ccc31c3
+            applicationId 'nerd.tuxmobil.fahrplan.congress'
             flavorDimension 'event'
-            buildConfigField "String", "SCHEDULE_DOMAIN", '"events.ccc.de"'
-            buildConfigField "String", "SCHEDULE_DOMAIN_PART", '"http://events.ccc.de"'
-            buildConfigField "String", "SCHEDULE_EVENT_PART", '"/events/%1$s.html"'
-            buildConfigField "String", "SCHEDULE_PART", '"/congress/2014/Fahrplan"'
-            buildConfigField "String", "SCHEDULE_PATH", '"/congress/2014/Fahrplan/schedule.xml"'
-            buildConfigField "int", "SCHEDULE_FIRST_DAY_START_YEAR", "2014"
-            buildConfigField "int", "SCHEDULE_FIRST_DAY_START_MONTH", "12"
-            buildConfigField "int", "SCHEDULE_FIRST_DAY_START_DAY", "27"
-            buildConfigField "int", "SCHEDULE_LAST_DAY_END_YEAR", "2014"
-            buildConfigField "int", "SCHEDULE_LAST_DAY_END_MONTH", "12"
-            buildConfigField "int", "SCHEDULE_LAST_DAY_END_DAY", "31"
-            buildConfigField "boolean", "SCHEDULE_SUPPORTS_HTTPS", "true"
-            buildConfigField "String", "SCHEDULE_FEEDBACK_URL", '"https://frab.cccv.de/en/31C3/public/events/%s/feedback/new"'
+            signingConfig signingConfigs.ccc31c3
         }
+
         withWear {
             flavorDimension 'feature'
 
             dependencies {
+                compile fileTree(dir: 'libs', include: ['*.jar'])
+                compile 'com.google.android.support:wearable:1.1.+'
                 compile 'com.google.android.gms:play-services-wearable:6.1.71'
-                wearApp project(':wear')
             }
         }
         noWear {
             flavorDimension 'feature'
         }
     }
-}
-
-dependencies {
-    compile "com.android.support:appcompat-v7:21.0.+"
-    compile 'com.afollestad:material-dialogs:0.4.6'
 }

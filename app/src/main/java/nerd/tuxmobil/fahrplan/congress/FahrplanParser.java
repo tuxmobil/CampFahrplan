@@ -469,6 +469,7 @@ class parser extends AsyncTask<String, Void, Boolean> {
             if (isCancelled()) {
                 return false;
             }
+            WearAppListenerService.requestRefreshLectureData(context, lectures);
             meta.numdays = numdays;
             meta.eTag = eTag;
             storeMeta(context, meta);

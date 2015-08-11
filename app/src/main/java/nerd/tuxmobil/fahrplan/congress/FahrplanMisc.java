@@ -373,6 +373,8 @@ public class FahrplanMisc {
 
             db.insert(HighlightsTable.NAME, null, values);
             db.setTransactionSuccessful();
+
+            WearAppListenerService.requestRefreshSingleLectureData(context, lecture);
         } catch (SQLException e) {
         } finally {
             db.endTransaction();

@@ -5,7 +5,8 @@ such as Chaos Communication Camp or Chaos Communication Congress.
 
 In addition to an daily overview of talks, the app lets you read the abstracts,
 highlight talks, add a talk to your calendar, share talks with others, and
-set reminders within the app.
+set reminders within the app. Current, favorite and upcoming talks can also be
+displayed using a companion wear app.
 
 [![Available for Android at Google Play](gfx/google-play-badge.png)][playstore]
 
@@ -21,7 +22,9 @@ Before you can run a release build for your product flavor
 please create a `gradle.properties` file in the `app` module.
 A template file is provided which contains the required settings -
 see [`app/gradle.properties.example`](app/gradle.properties.example).
-
+Also create a `wear/gradle.properties` for the `wear` module.
+Please make sure that both projects use the same signing keys as otherwise the
+communication is not going to work.
 
 ## Contributing
 

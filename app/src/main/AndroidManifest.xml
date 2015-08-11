@@ -12,7 +12,8 @@
             android:label="@string/app_name"
             android:name="nerd.tuxmobil.fahrplan.congress.MyApp"
             android:theme="@style/Theme.Congress"
-            >
+            android:logo="@drawable/ic_actionbar_logo">
+
         <activity
                 android:label="@string/app_name"
                 android:theme="@style/Theme.Congress.NoActionBar"
@@ -74,5 +75,5 @@
             android:theme="@style/Theme.Congress.NoActionBar"
             android:label="@string/starred_lectures" >
         </activity>
-    </application>
+   </application>
 </manifest>
