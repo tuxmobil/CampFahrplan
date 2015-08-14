@@ -25,6 +25,7 @@
     <dimen name="list_pane_leftright_padding">16dp</dimen>
     <dimen name="activity_padding">16dp</dimen>
     <dimen name="header_height">0dp</dimen>
+    <item type="integer" name="max_box_scale">2</item>
 
     <!-- Event item parameters -->
     <dimen name="event_item_corner_radius">6dp</dimen>

@@ -176,9 +176,11 @@ public class HorizontalSnapScrollView extends HorizontalScrollView {
         });
     }
 
-    public static int calcMaxCols(Resources res, int availPixels) {
+    public static int calcMaxCols(Resources res, int availPixels, int columnsCount) {
         int max_cols = res.getInteger(R.integer.max_cols);
         int min_dip = res.getInteger(R.integer.min_width_dip);
+        int max_dip = min_dip * res.getInteger(R.integer.max_box_scale);
+        MyApp.LogDebug(LOG_TAG, "min_dip " + min_dip +  " max_dip " + max_dip + " colCount: " + columnsCount);
         float scale = res.getDisplayMetrics().density;
         MyApp.LogDebug(LOG_TAG, "calcMaxCols: avail " + availPixels + " min dip " + min_dip);
         int dip;
@@ -187,6 +189,13 @@ public class HorizontalSnapScrollView extends HorizontalScrollView {
             MyApp.LogDebug(LOG_TAG, "calcMaxCols: " + dip + " on " + max_cols + " cols.");
             max_cols--;
         } while ((dip < min_dip) && (max_cols > 0));
+
+        dip = (int) ((((float) availPixels) / max_cols) / scale);
+        while ((max_cols >= columnsCount) && (dip < max_dip)) {
+            max_cols--;
+            dip = (int) ((((float) availPixels) / max_cols) / scale);
+            MyApp.LogDebug(LOG_TAG, "calcMaxCols: " + dip + " on " + max_cols + " cols.");
+        }
         return max_cols + 1;
     }
 
@@ -196,7 +205,7 @@ public class HorizontalSnapScrollView extends HorizontalScrollView {
                 "onSizeChanged " + oldw + ", " + oldh + ", " + w + ", " + h + " getMW:"
                         + getMeasuredWidth());
         super.onSizeChanged(w, h, oldw, oldh);
-        max_cols = calcMaxCols(getResources(), getMeasuredWidth());
+        max_cols = calcMaxCols(getResources(), getMeasuredWidth(), MyApp.room_count);
 
         int newItemWidth = Math.round((float) getMeasuredWidth() / max_cols);
         float scale = getResources().getDisplayMetrics().density;

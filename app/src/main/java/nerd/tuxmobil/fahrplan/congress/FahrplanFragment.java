@@ -134,7 +134,7 @@ public class FahrplanFragment extends Fragment implements
         MyApp.LogDebug(LOG_TAG, "screen width = " + screenWidth);
         MyApp.LogDebug(LOG_TAG, "time width " + getResources().getDimension(R.dimen.time_width));
         screenWidth -= getResources().getDimension(R.dimen.time_width);
-        int max_cols = HorizontalSnapScrollView.calcMaxCols(getResources(), screenWidth);
+        int max_cols = HorizontalSnapScrollView.calcMaxCols(getResources(), screenWidth, MyApp.room_count);
         MyApp.LogDebug(LOG_TAG, "max cols: " + max_cols);
         columnWidth = (int) ((float) screenWidth / max_cols); // Width for the row column
         HorizontalScrollView roomScroller =
