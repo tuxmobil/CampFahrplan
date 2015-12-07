@@ -365,7 +365,7 @@ public class MainActivity extends ActionBarActivity
             args.putString(BundleKeys.EVENT_SUBTITLE, lecture.subtitle);
             args.putString(BundleKeys.EVENT_ABSTRACT, lecture.abstractt);
             args.putString(BundleKeys.EVENT_DESCRIPTION, lecture.description);
-            args.putString(BundleKeys.EVENT_SPEAKERS, lecture.speakers.replaceAll(";", ", "));
+            args.putString(BundleKeys.EVENT_SPEAKERS, lecture.getFormattedSpeakers());
             args.putString(BundleKeys.EVENT_LINKS, lecture.links);
             args.putString(BundleKeys.EVENT_ID, lecture.lecture_id);
             args.putInt(BundleKeys.EVENT_TIME, lecture.startTime);
@@ -382,7 +382,7 @@ public class MainActivity extends ActionBarActivity
             intent.putExtra(BundleKeys.EVENT_SUBTITLE, lecture.subtitle);
             intent.putExtra(BundleKeys.EVENT_ABSTRACT, lecture.abstractt);
             intent.putExtra(BundleKeys.EVENT_DESCRIPTION, lecture.description);
-            intent.putExtra(BundleKeys.EVENT_SPEAKERS, lecture.speakers.replaceAll(";", ", "));
+            intent.putExtra(BundleKeys.EVENT_SPEAKERS, lecture.getFormattedSpeakers());
             intent.putExtra(BundleKeys.EVENT_LINKS, lecture.links);
             intent.putExtra(BundleKeys.EVENT_ID, lecture.lecture_id);
             intent.putExtra(BundleKeys.EVENT_TIME, lecture.startTime);
