@@ -58,6 +58,8 @@ public class FahrplanFragment extends Fragment implements
 
     private MyApp global;
 
+    protected PreferencesHelper preferencesHelper;
+
     private static String LOG_TAG = "Fahrplan";
 
     public static final int FAHRPLAN_FRAGMENT_REQUEST_CODE = 6166;
@@ -130,6 +132,7 @@ public class FahrplanFragment extends Fragment implements
         super.onViewCreated(view, savedInstanceState);
 
         global = (MyApp) getActivity().getApplicationContext();
+        preferencesHelper = global.getPreferencesHelper();
         scale = getResources().getDisplayMetrics().density;
         screenWidth = getResources().getDisplayMetrics().widthPixels;
         MyApp.LogDebug(LOG_TAG, "screen width = " + screenWidth);
@@ -155,9 +158,10 @@ public class FahrplanFragment extends Fragment implements
             });
         }
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        SharedPreferences prefs;
         trackBackgrounds = TrackBackgrounds.getTrackBackgroundNormal(getActivity());
-        if (prefs.getBoolean(BundleKeys.PREFS_ALTERNATIVE_HIGHLIGHT, false)) {
+        boolean alternativeHighlight = preferencesHelper.alternativeHighlightPreference.get();
+        if (alternativeHighlight) {
             MyApp.LogDebug(LOG_TAG, "alternative highlight");
             trackBackgroundsHi = TrackBackgrounds.getTrackBackgroundHighLightAlternative(getActivity());
         } else {

@@ -43,7 +43,7 @@ public final class AlarmReceiver extends BroadcastReceiver {
             Notification notify = new Notification();
 
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-            boolean insistent = prefs.getBoolean("insistent", false);
+            boolean insistent = prefs.getBoolean(PreferencesHelper.PREFS_INSISTENT_ALARM, false);
 
             Intent notificationIntent = new Intent(context, MainActivity.class);
             notificationIntent.putExtra("lecture_id", lecture_id);
@@ -54,7 +54,9 @@ public final class AlarmReceiver extends BroadcastReceiver {
                     .getActivity(context, lid, notificationIntent, PendingIntent.FLAG_ONE_SHOT);
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
-            notify = builder.setSound(Uri.parse(prefs.getString("reminder_tone", "")))
+            String reminderToneUriString = prefs.getString(PreferencesHelper.PREFS_REMINDER_TONE_URI_STRING, "");
+            Uri reminderToneUri = Uri.parse(reminderToneUriString);
+            notify = builder.setSound(reminderToneUri)
                     .setAutoCancel(true)
                     .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE)
                     .setSmallIcon(R.drawable.ic_notification)

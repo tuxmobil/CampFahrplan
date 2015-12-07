@@ -1,6 +1,8 @@
 package nerd.tuxmobil.fahrplan.congress;
 
 import android.app.Application;
+import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.util.SparseIntArray;
 
@@ -74,6 +76,8 @@ public class MyApp extends Application {
 
     public static SparseIntArray roomList = new SparseIntArray();
 
+    protected PreferencesHelper preferencesHelper;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -96,4 +100,13 @@ public class MyApp extends Application {
             Log.d(tag, message);
         }
     }
+
+    public @NonNull PreferencesHelper getPreferencesHelper() {
+        if (preferencesHelper == null) {
+            preferencesHelper = new PreferencesHelper(
+                    PreferenceManager.getDefaultSharedPreferences(this), this);
+        }
+        return preferencesHelper;
+    }
+
 }

@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
@@ -93,10 +94,14 @@ public final class onBootReceiver extends BroadcastReceiver {
         }
 
         // start auto updates
+        Resources resources = context.getResources();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        boolean do_auto_updates = prefs.getBoolean("auto_update", false);
-        if (do_auto_updates) {
-            long last_fetch = prefs.getLong("last_fetch", 0);
+        boolean defaultAutoUpdate = resources.getBoolean(R.bool.default_auto_update);
+        boolean doAutoUpdate = prefs.getBoolean(PreferencesHelper.PREFS_AUTO_UPDATE,
+                defaultAutoUpdate);
+        if (doAutoUpdate) {
+            int defaultLastFetch = resources.getInteger(R.integer.default_last_fetch);
+            long last_fetch = prefs.getLong(PreferencesHelper.PREFS_LAST_FETCH, defaultLastFetch);
             long now_millis;
             now.setToNow();
             now_millis = now.toMillis(true);

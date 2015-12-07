@@ -6,12 +6,9 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.text.format.Time;
@@ -22,6 +19,8 @@ import nerd.tuxmobil.fahrplan.congress.MyApp.TASKS;
 public class UpdateService extends IntentService
         implements OnDownloadCompleteListener, OnParseCompleteListener {
 
+    protected PreferencesHelper preferencesHelper;
+
     public UpdateService() {
         super("UpdateService");
     }
@@ -30,9 +29,14 @@ public class UpdateService extends IntentService
 
     private FetchFahrplan fetcher;
 
-    final String PREFS_NAME = "settings";
-
     private FahrplanParser parser;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        MyApp application = (MyApp) getApplication();
+        preferencesHelper = application.getPreferencesHelper();
+    }
 
     @Override
     public void onParseDone(Boolean result, String version) {
@@ -51,8 +55,6 @@ public class UpdateService extends IntentService
                 Context.NOTIFICATION_SERVICE);
         Notification notify = new Notification();
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-
         Intent notificationIntent = new Intent(this, MainActivity.class);
         notificationIntent.setFlags(
                 Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
@@ -60,11 +62,13 @@ public class UpdateService extends IntentService
                 .getActivity(this, 0, notificationIntent, PendingIntent.FLAG_ONE_SHOT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+        String reminderToneUriString = preferencesHelper.reminderTonePreference.get();
+        Uri reminderToneUri = Uri.parse(reminderToneUriString);
         notify = builder.setAutoCancel(true)
                 .setContentText(getString(R.string.aktualisiert_auf, version))
                 .setContentTitle(getString(R.string.app_name))
                 .setDefaults(Notification.DEFAULT_LIGHTS).setSmallIcon(R.drawable.ic_notification)
-                .setSound(Uri.parse(prefs.getString("reminder_tone", "")))
+                .setSound(reminderToneUri)
                 .setContentIntent(contentIntent)
                 .setSubText(changesTxt)
                 .setColor(getResources().getColor(R.color.colorAccent))
@@ -90,13 +94,10 @@ public class UpdateService extends IntentService
         MyApp.LogDebug(LOG_TAG, "Response... " + status);
         MyApp.task_running = TASKS.NONE;
         if ((status == HTTP_STATUS.HTTP_OK) || (status == HTTP_STATUS.HTTP_NOT_MODIFIED)) {
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
             Time now = new Time();
             now.setToNow();
             long millis = now.toMillis(true);
-            Editor edit = prefs.edit();
-            edit.putLong("last_fetch", millis);
-            edit.commit();
+            preferencesHelper.lastFetchPreferences.set(millis);
         }
         if (status != HTTP_STATUS.HTTP_OK) {
             MyApp.LogDebug(LOG_TAG, "background update failed with " + status);
@@ -111,8 +112,7 @@ public class UpdateService extends IntentService
 
     private void fetchFahrplan(OnDownloadCompleteListener completeListener) {
         if (MyApp.task_running == TASKS.NONE) {
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-            String alternateURL = prefs.getString(BundleKeys.PREFS_SCHEDULE_URL, null);
+            String alternateURL = preferencesHelper.scheduleUrlPreference.get();
             String url;
             if (!TextUtils.isEmpty(alternateURL)) {
                 url = alternateURL;
