@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 
 import info.metadude.android.typedpreferences.BooleanPreference;
+import info.metadude.android.typedpreferences.IntPreference;
 import info.metadude.android.typedpreferences.LongPreference;
 import info.metadude.android.typedpreferences.StringPreference;
 
@@ -21,6 +22,9 @@ public class PreferencesHelper {
 
     public static final String PREFS_CHANGES_SEEN =
             "nerd.tuxmobil.fahrplan.congress.Prefs.CHANGES_SEEN";
+
+    public static final String PREFS_DISPLAY_DAY =
+            "displayDay";
 
     public static final String PREFS_INSISTENT_ALARM =
             "insistent";
@@ -42,6 +46,8 @@ public class PreferencesHelper {
 
     protected final BooleanPreference changesSeenPreference;
 
+    protected final IntPreference displayDayPreference;
+
     protected final BooleanPreference insistentAlarmPreference;
 
     protected final LongPreference lastFetchPreferences;
@@ -61,6 +67,8 @@ public class PreferencesHelper {
                 sharedPreferences, PREFS_AUTO_UPDATE, false);
         changesSeenPreference = new BooleanPreference(
                 sharedPreferences, PREFS_CHANGES_SEEN, true);
+        displayDayPreference = new IntPreference(
+                sharedPreferences, PREFS_DISPLAY_DAY, 1);
         insistentAlarmPreference = new BooleanPreference(
                 sharedPreferences, PREFS_INSISTENT_ALARM, false);
         lastFetchPreferences = new LongPreference(

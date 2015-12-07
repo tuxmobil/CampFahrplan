@@ -2,7 +2,6 @@ package nerd.tuxmobil.fahrplan.congress;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -10,7 +9,6 @@ import android.database.sqlite.SQLiteException;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -91,8 +89,6 @@ public class FahrplanFragment extends Fragment implements
 
     private HashMap<String, Integer> trackBackgroundsHi;
 
-    public static final String PREFS_NAME = "settings";
-
     private int screenWidth = 0;
 
     private Typeface boldCondensed;
@@ -158,7 +154,6 @@ public class FahrplanFragment extends Fragment implements
             });
         }
 
-        SharedPreferences prefs;
         trackBackgrounds = TrackBackgrounds.getTrackBackgroundNormal(getActivity());
         boolean alternativeHighlight = preferencesHelper.alternativeHighlightPreference.get();
         if (alternativeHighlight) {
@@ -171,8 +166,7 @@ public class FahrplanFragment extends Fragment implements
         trackAccentColors = TrackBackgrounds.getTrackAccentColorNormal(getActivity());
         trackAccentColorsHighlight = TrackBackgrounds.getTrackAccentColorHighlight(getActivity());
 
-        prefs = getActivity().getSharedPreferences(PREFS_NAME, 0);
-        mDay = prefs.getInt("displayDay", 1);
+        mDay = preferencesHelper.displayDayPreference.get();
 
         inflater = (LayoutInflater) getActivity()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -204,10 +198,7 @@ public class FahrplanFragment extends Fragment implements
     }
 
     private void saveCurrentDay(int day) {
-        SharedPreferences settings = getActivity().getSharedPreferences(PREFS_NAME, 0);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putInt("displayDay", day);
-        editor.apply();
+        preferencesHelper.displayDayPreference.set(day);
     }
 
     @Override
@@ -922,8 +913,7 @@ public class FahrplanFragment extends Fragment implements
                 if (MyApp.numdays > 1) {
                     build_navigation_menu();
                 }
-                SharedPreferences prefs = getActivity().getSharedPreferences(PREFS_NAME, 0);
-                mDay = prefs.getInt("displayDay", 1);
+                mDay = preferencesHelper.displayDayPreference.get();
                 if (mDay > MyApp.numdays) {
                     mDay = 1;
                 }
