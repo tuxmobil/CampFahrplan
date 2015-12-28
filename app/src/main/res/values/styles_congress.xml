@@ -17,7 +17,7 @@
      limitations under the License.
 -->
 
-<resources xmlns:android="http://schemas.android.com/apk/res/android">
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
 
     <style name="Theme.Congress" parent="Theme.AppCompat">
         <!-- Set AppCompat’s actionBarStyle -->
@@ -153,6 +153,17 @@
         <item name="android:textAllCaps">true</item>
         <item name="android:paddingBottom">@dimen/event_detail_section_margin_top</item>
         <item name="android:paddingTop">@dimen/event_detail_section_margin_top</item>
+    </style>
+
+    <style name="BuildInfoItem">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">start</item>
+        <item name="android:layout_marginLeft">16dp</item>
+        <item name="android:layout_marginRight">16dp</item>
+        <item name="android:layout_marginStart" tools:targetApi="jelly_bean_mr1">16dp</item>
+        <item name="android:layout_marginEnd" tools:targetApi="jelly_bean_mr1">16dp</item>
+        <item name="android:gravity">center</item>
     </style>
 
 </resources>
