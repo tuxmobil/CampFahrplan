@@ -7,7 +7,7 @@ In addition to an daily overview of talks, the app lets you read the abstracts,
 highlight talks, add a talk to your calendar, share talks with others, and
 set reminders within the app.
 
-[![Available for Android at Google Play](gfx/google-play-badge.png)][playstore]
+[![Available for Android at F-Droid](gfx/fdroid-badge.png)][fdroid] [![Available for Android at Google Play](gfx/google-play-badge.png)][playstore]
 
 Moreover, the app is designed to consume schedule data published in a specific
 format as provided by [Pentabarf][pentabarf] or its successor [Frab][frab].
@@ -56,6 +56,7 @@ limitations under the License.
 ```
 
 [ccc-events]: http://events.ccc.de
+[fdroid]: https://f-droid.org/repository/browse/?fdid=nerd.tuxmobil.fahrplan.congress
 [playstore]: https://play.google.com/store/apps/details?id=nerd.tuxmobil.fahrplan.congress
 [pentabarf]: https://github.com/nevs/pentabarf
 [frab]: https://github.com/frab/frab
