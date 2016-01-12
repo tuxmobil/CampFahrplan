@@ -3,6 +3,7 @@ package nerd.tuxmobil.fahrplan.congress;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.text.Html;
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +28,12 @@ public class AboutDialog extends DialogFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         TextView text = (TextView) view.findViewById(R.id.eventVersion);
-        text.setText(getString(R.string.fahrplan) + " " + MyApp.version);
+        if (MyApp.version == null || TextUtils.isEmpty(MyApp.version)) {
+            text.setVisibility(View.GONE);
+        }
+        else {
+            text.setText(getString(R.string.fahrplan) + " " + MyApp.version);
+        }
         text = (TextView) view.findViewById(R.id.eventTitle);
         text.setText(MyApp.title);
         text = (TextView) view.findViewById(R.id.eventSubtitle);
