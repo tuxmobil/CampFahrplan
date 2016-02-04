@@ -1,13 +1,12 @@
 package nerd.tuxmobil.fahrplan.congress;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -35,10 +34,10 @@ public class AlarmTimePickerFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Context activity = getActivity();
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
-        int defaultAlarmTimeIndex = activity.getResources().getInteger(R.integer.default_alarm_time_index);
-        alarmTimeIndex = prefs.getInt(BundleKeys.PREFS_ALARM_TIME_INDEX, defaultAlarmTimeIndex);
+        Activity activity = getActivity();
+        MyApp application = (MyApp) activity.getApplication();
+        PreferencesHelper preferencesHelper = application.getPreferencesHelper();
+        alarmTimeIndex = preferencesHelper.alarmTimeIndexPreference.get();
         LayoutInflater inflater = (LayoutInflater) activity
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         @SuppressLint("InflateParams")

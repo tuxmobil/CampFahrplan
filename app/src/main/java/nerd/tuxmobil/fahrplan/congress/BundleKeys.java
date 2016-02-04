@@ -50,13 +50,8 @@ public interface BundleKeys {
     public static final String CHANGES_DLG_VERSION =
             "nerd.tuxmobil.fahrplan.congress.ChangesDialog.VERSION";
 
-    // Shared Preferences
-    public static final String PREFS_CHANGES_SEEN =
-            "nerd.tuxmobil.fahrplan.congress.Prefs.CHANGES_SEEN";
-    public static final String PREFS_SCHEDULE_URL =
-            "nerd.tuxmobil.fahrplan.congress.Prefs.SCHEDULE_URL";
-    public static final String PREFS_ALTERNATIVE_HIGHLIGHT =
-            "nerd.tuxmobil.fahrplan.congress.Prefs.ALTERNATIVE_HIGHLIGHT";
-    public static final String PREFS_ALARM_TIME_INDEX =
-            "nerd.tuxmobil.fahrplan.congress.Prefs.ALARM_TIME_INDEX";
+    // Redraw schedule
+    public static final String REDRAW_SCHEDULE =
+            "nerd.tuxmobil.fahrplan.congress.REDRAW_SCHEDULE";
+
 }

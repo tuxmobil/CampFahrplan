@@ -4,11 +4,9 @@ import org.xmlpull.v1.XmlPullParser;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
 import android.util.Xml;
 
 import java.io.StringReader;
@@ -576,10 +574,8 @@ class parser extends AsyncTask<String, Void, Boolean> {
         }
 
         if (changed) {
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.context);
-            SharedPreferences.Editor edit = prefs.edit();
-            edit.putBoolean(BundleKeys.PREFS_CHANGES_SEEN, false);
-            edit.commit();
+            MyApp application = (MyApp) context.getApplicationContext();
+            application.getPreferencesHelper().changesSeenPreference.set(false);
         }
     }
 

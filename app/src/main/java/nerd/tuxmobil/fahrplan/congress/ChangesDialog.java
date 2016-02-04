@@ -2,10 +2,8 @@ package nerd.tuxmobil.fahrplan.congress;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
@@ -109,10 +107,8 @@ public class ChangesDialog extends DialogFragment {
     }
 
     private void flagChangesAsSeen() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        SharedPreferences.Editor edit = prefs.edit();
-        edit.putBoolean(BundleKeys.PREFS_CHANGES_SEEN, true);
-        edit.commit();
+        MyApp application = (MyApp) getActivity().getApplication();
+        application.preferencesHelper.changesSeenPreference.set(true);
     }
 
 }
