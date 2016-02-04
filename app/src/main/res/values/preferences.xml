@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Preferences / default values -->
+
+    <!-- Synchronize with @strings/default_alarm_time_value -->
+    <integer name="default_alarm_time_index">2</integer>
+    <integer name="default_display_day">1</integer>
+    <integer name="default_last_fetch">0</integer>
+
+    <!-- Synchronize with @integers/default_alarm_time_index and string-array/alarm_time_values -->
+    <string name="default_alarm_time_value" translatable="false">10</string>
+    <string name="default_reminder_tone_uri" translatable="false" />
+
+    <bool name="default_alternative_highlight">false</bool>
+    <bool name="default_auto_update">true</bool>
+    <bool name="default_changes_seen">true</bool>
+    <bool name="default_insistent_alarm">false</bool>
+
+</resources>

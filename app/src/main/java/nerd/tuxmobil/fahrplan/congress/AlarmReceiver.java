@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.preference.PreferenceManager;
@@ -42,8 +43,11 @@ public final class AlarmReceiver extends BroadcastReceiver {
                     .getSystemService(Context.NOTIFICATION_SERVICE);
             Notification notify = new Notification();
 
+            Resources resources = context.getResources();
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-            boolean insistent = prefs.getBoolean(PreferencesHelper.PREFS_INSISTENT_ALARM, false);
+            boolean defaultInsistentAlarm = resources.getBoolean(R.bool.default_insistent_alarm);
+            boolean insistent = prefs.getBoolean(
+                    PreferencesHelper.PREFS_INSISTENT_ALARM, defaultInsistentAlarm);
 
             Intent notificationIntent = new Intent(context, MainActivity.class);
             notificationIntent.putExtra("lecture_id", lecture_id);
@@ -54,13 +58,15 @@ public final class AlarmReceiver extends BroadcastReceiver {
                     .getActivity(context, lid, notificationIntent, PendingIntent.FLAG_ONE_SHOT);
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
-            String reminderToneUriString = prefs.getString(PreferencesHelper.PREFS_REMINDER_TONE_URI_STRING, "");
+            String defaultReminderToneUri = context.getString(R.string.default_reminder_tone_uri);
+            String reminderToneUriString = prefs.getString(
+                    PreferencesHelper.PREFS_REMINDER_TONE_URI_STRING, defaultReminderToneUri);
             Uri reminderToneUri = Uri.parse(reminderToneUriString);
             notify = builder.setSound(reminderToneUri)
                     .setAutoCancel(true)
                     .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE)
                     .setSmallIcon(R.drawable.ic_notification)
-                    .setColor(context.getResources().getColor(R.color.colorAccent))
+                    .setColor(resources.getColor(R.color.colorAccent))
                     .setContentIntent(contentIntent)
                     .setContentText(context.getString(R.string.reminder))
                     .setContentTitle(title)

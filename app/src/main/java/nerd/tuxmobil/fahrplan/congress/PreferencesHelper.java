@@ -2,6 +2,7 @@ package nerd.tuxmobil.fahrplan.congress;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.support.annotation.NonNull;
 
 import info.metadude.android.typedpreferences.BooleanPreference;
@@ -58,25 +59,53 @@ public class PreferencesHelper {
 
     public PreferencesHelper(@NonNull SharedPreferences sharedPreferences,
                              @NonNull Context context) {
-        int defaultAlarmTimeIndex = context.getResources().getInteger(R.integer.default_alarm_time_index);
-        alarmTimeIndexPreference = new IntPreference(
-                sharedPreferences, PREFS_ALARM_TIME_INDEX, defaultAlarmTimeIndex);
-        alternativeHighlightPreference = new BooleanPreference(
-                sharedPreferences, PREFS_ALTERNATIVE_HIGHLIGHT, false);
-        autoUpdatePreference = new BooleanPreference(
-                sharedPreferences, PREFS_AUTO_UPDATE, false);
-        changesSeenPreference = new BooleanPreference(
-                sharedPreferences, PREFS_CHANGES_SEEN, true);
-        displayDayPreference = new IntPreference(
-                sharedPreferences, PREFS_DISPLAY_DAY, 1);
-        insistentAlarmPreference = new BooleanPreference(
-                sharedPreferences, PREFS_INSISTENT_ALARM, false);
-        lastFetchPreferences = new LongPreference(
-                sharedPreferences, PREFS_LAST_FETCH, 0);
-        reminderTonePreference = new StringPreference(
-                sharedPreferences, PREFS_REMINDER_TONE_URI_STRING, "");
-        scheduleUrlPreference = new StringPreference(
-                sharedPreferences, PREFS_SCHEDULE_URL, null);
+
+        Resources resources = context.getResources();
+
+        int defaultAlarmTimeIndex = resources.getInteger(
+                R.integer.default_alarm_time_index);
+        boolean defaultAlternativeHighlight = resources.getBoolean(
+                R.bool.default_alternative_highlight);
+        boolean defaultAutoUpdate = resources.getBoolean(
+                R.bool.default_auto_update);
+        boolean defaultChangesSeen = resources.getBoolean(
+                R.bool.default_changes_seen);
+        int defaultDisplayDay = resources.getInteger(
+                R.integer.default_display_day);
+        boolean defaultInsistentAlarm = resources.getBoolean(
+                R.bool.default_insistent_alarm);
+        int defaultLastFetch = resources.getInteger(
+                R.integer.default_last_fetch);
+        String defaultReminderToneUri = resources.getString(
+                R.string.default_reminder_tone_uri);
+
+        alarmTimeIndexPreference = new IntPreference(sharedPreferences,
+                PREFS_ALARM_TIME_INDEX,
+                defaultAlarmTimeIndex);
+        alternativeHighlightPreference = new BooleanPreference(sharedPreferences,
+                PREFS_ALTERNATIVE_HIGHLIGHT,
+                defaultAlternativeHighlight);
+        autoUpdatePreference = new BooleanPreference(sharedPreferences,
+                PREFS_AUTO_UPDATE,
+                defaultAutoUpdate);
+        changesSeenPreference = new BooleanPreference(sharedPreferences,
+                PREFS_CHANGES_SEEN,
+                defaultChangesSeen);
+        displayDayPreference = new IntPreference(sharedPreferences,
+                PREFS_DISPLAY_DAY,
+                defaultDisplayDay);
+        insistentAlarmPreference = new BooleanPreference(sharedPreferences,
+                PREFS_INSISTENT_ALARM,
+                defaultInsistentAlarm);
+        lastFetchPreferences = new LongPreference(sharedPreferences,
+                PREFS_LAST_FETCH,
+                defaultLastFetch);
+        reminderTonePreference = new StringPreference(sharedPreferences,
+                PREFS_REMINDER_TONE_URI_STRING,
+                defaultReminderToneUri);
+        scheduleUrlPreference = new StringPreference(sharedPreferences,
+                PREFS_SCHEDULE_URL,
+                null);
     }
 
 }
