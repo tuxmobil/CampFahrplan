@@ -27,6 +27,16 @@ public class DateHelper {
     }
 
     /**
+     * Returns a date string formatted for sharing an event date.
+     */
+    public static String getFormattedDateForSharing(long dateUTC) {
+        Date date = new Date(dateUTC);
+        return SimpleDateFormat.getDateTimeInstance(
+                SimpleDateFormat.FULL, SimpleDateFormat.SHORT)
+                .format(date);
+    }
+
+    /**
      * Returns a formatted time string.
      * Try this pattern for readable output: %Y-%m-%dT%H:%M:%S%z
      */

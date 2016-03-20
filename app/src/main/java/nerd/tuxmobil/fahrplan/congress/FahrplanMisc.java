@@ -144,9 +144,7 @@ public class FahrplanMisc {
     }
 
     public static void share(Context context, Lecture lecture) {
-        Date date = new Date(lecture.dateUTC);
-        String formattedDate = SimpleDateFormat.getDateTimeInstance(
-                SimpleDateFormat.FULL, SimpleDateFormat.SHORT).format(date);
+        String formattedDate = DateHelper.getFormattedDateForSharing(lecture.dateUTC);
         final String eventUrl = getEventUrl(context, lecture.lecture_id);
 
         StringBuilder sb = new StringBuilder();
