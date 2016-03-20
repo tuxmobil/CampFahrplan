@@ -143,17 +143,18 @@ public class FahrplanMisc {
         metaDB.close();
     }
 
-    public static void share(Context context, Lecture l) {
+    public static void share(Context context, Lecture lecture) {
+        String formattedDate = DateHelper.getFormattedDateForSharing(lecture.dateUTC);
+        final String eventUrl = getEventUrl(context, lecture.lecture_id);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(lecture.title).append("\n");
+        sb.append(formattedDate).append(", ");
+        sb.append(lecture.room).append("\n\n");
+        sb.append(eventUrl);
+
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
-        StringBuilder sb = new StringBuilder();
-        Time time = l.getTime();
-        sb.append(l.title).append("\n").append(SimpleDateFormat
-                .getDateTimeInstance(SimpleDateFormat.FULL, SimpleDateFormat.SHORT)
-                .format(new Date(time.toMillis(true))));
-        sb.append(", ").append(l.room).append("\n\n");
-        final String eventUrl = getEventUrl(context, l.lecture_id);
-        sb.append(eventUrl);
         sendIntent.putExtra(Intent.EXTRA_TEXT, sb.toString());
         sendIntent.setType("text/plain");
         context.startActivity(sendIntent);
